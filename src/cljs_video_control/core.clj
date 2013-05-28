@@ -1,7 +1,7 @@
 (ns cljs-video-control.core
-  (:require [ring.adapter.jetty :as jetty]
-            [ring.middleware.resource :as resources]
-            [ring.middleware.reload :as reload]
+  (:use compojure.core)
+  (:require [compojure.route :as route]
+            [compojure.handler :as handler]
             [hiccup.core :as h]
             [hiccup.page :as hp]))
 
@@ -18,15 +18,10 @@
        "js/cljs.js")
      ]))
 
-(defn handler [request]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body (render-body)})
+
+(defroutes my-routes
+  (GET "/" [] (render-body))
+  (route/resources "/" {:root "public"}))
 
 (def app
-  (-> handler
-    (resources/wrap-resource "public")
-    (reload/wrap-reload)))
-
-(defn -main [& args]
-  (jetty/run-jetty app {:port 3000}))
+  (handler/site my-routes))

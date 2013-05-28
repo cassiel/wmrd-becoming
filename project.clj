@@ -4,10 +4,10 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [ring "1.1.8"]
-                 [hiccup "1.0.3"]
+                 [compojure "1.1.5"]
                  [jayq "2.3.0"]]
-  :plugins [[lein-cljsbuild "0.3.2"]]
+  :plugins [[lein-cljsbuild "0.3.2"]
+            [lein-ring "0.8.5"]]
 
   :cljsbuild
   {:builds
@@ -16,4 +16,5 @@
                 :output-to "resources/public/js/cljs.js"
                 :optimizations :simple}}]}
 
-  :main cljs-video-control.core)
+  :ring {:port 3000
+         :handler cljs-video-control.core/app})
