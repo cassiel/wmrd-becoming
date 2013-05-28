@@ -9,11 +9,21 @@
   :plugins [[lein-cljsbuild "0.3.2"]
             [lein-ring "0.8.5"]]
 
+  :resource-paths ["resources" "_dyn-resources"]
+
+  :aliases {"go" ["ring" "server-headless"]
+            "once" ["cljsbuild" "once"]
+            "auto" ["cljsbuild" "auto"]}
+
   :cljsbuild
   {:builds
-   [{:source-paths ["src-cljs"]
+   [{:source-paths ["src-cljs/demo"]
      :compiler {:pretty-print true
-                :output-to "resources/public/js/cljs.js"
+                :output-to "_dyn-resources/public/js/demo.js"
+                :optimizations :simple}}
+    {:source-paths ["src-cljs/video"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/video.js"
                 :optimizations :simple}}]}
 
   :ring {:port 3000

@@ -1,4 +1,4 @@
-(ns cljs-video-control
+(ns demo
   (:use [jayq.core :only [$]])
   (:require [jayq.core :as jq]))
 
