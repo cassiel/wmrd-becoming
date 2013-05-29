@@ -2,7 +2,8 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-            [hiccup.page :as hp]))
+            [hiccup.page :as hp]
+            [hiccup.util :as hu]))
 
 (defn render-body []
   (hp/html5
@@ -25,6 +26,11 @@
        "http://backbonejs.org/backbone.js")
     (hp/include-css "css/style.css")]
    [:body
+    [:script#search_template {:type "text/template"}
+     [:label "<%= search_label %>"]
+     [:input#search_input {:type "text"}]
+     [:input#search_button {:type "button" :value "Search"}]]
+
     [:div
      [:video#video
       {:controls 1
@@ -49,6 +55,8 @@
      [:button#bash "BASH"]]
 
     [:div [:p#status "init"]]
+
+    [:div#search_container]
 
     (hp/include-js "js/video.js")]))
 

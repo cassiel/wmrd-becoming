@@ -18,28 +18,84 @@
          :click
          (fn [e] (.trigger o "play")))
 
+(defn JS>
+  "Inline key-value args to Javascript map."
+  [& args]
+  (clj->js (apply hash-map args)))
+
 ;; Do this as a proper backbone.js model:
 
 (def VideoSystem
   (.extend
    Backbone.Model
-   (clj->js {:play
-             (fn [] (this-as me (.set me (clj->js {:playing true}))))
+   (JS> :initialize
+        (fn [] #_ (this-as me
+                       (.on me "change:playing"
+                            (fn [model playing]
+                              (jq/inner ($ :#status)
+                                        (str "playing: " playing))))
+                       )
+          #_ (this-as me (.on me "change:timeUpdate"
+                              (fn [model t]
+                                (.log js/console t)))))
 
-             :stop
-             (fn [] (this-as me (.set me (clj->js {:playing false}))))
+        :play
+        (fn [] (this-as me (.set me (JS> :playing true))))
 
-             :timeUpdate
-             (fn [t] (this-as me (.set me (js-obj "timeUpdate" t))))})))
+        :stop
+        (fn [] (this-as me (.set me (JS> :playing false))))
+
+        :timeUpdate
+        (fn [t] (this-as me (.set me (JS> :location t))))
+
+        ;; defaults can also be a function.
+        :defaults {:playing false
+                   :location 0.0})))
 
 (def video-system (VideoSystem.))
 
-(.on video-system "change:playing"
+;; The view (and, erm, controller):
+
+(def VideoView
+  (.extend
+   Backbone.View
+   (JS> ;; Initialise by rendering the template into the DOM:
+    :initialize
+    (fn [] (this-as me
+                   ;; Re-render on any model change.
+                   (.listenTo me
+                              (.-model me)
+                              "change"
+                              (.-render me))
+                   (.render me)))
+
+    :events {"click input[type=button]" :doSearch}
+
+    :doSearch
+    (fn [] (js/alert (str "Search for " (.val ($ :#search_input)))))
+
+    :render
+    ;; Compile the template using underscore
+    (fn []
+      (this-as me
+               (let [location (.get (.-model me) "location")
+                     template (.template js/_
+                                         (.html ($ :#search_template))
+                                         (JS> :search_label location))]
+                 (-> (.-$el me)
+                     (.html template))))))))
+
+;; Build a view: it takes a model instance as argument.
+
+(def video-view (VideoView. (JS> :el ($ :#search_container)
+                                 :model video-system)))
+
+#_ (.on video-system "change:playing"
      (fn [model playing]
        (jq/inner ($ :#status)
                  (str "playing: " playing))))
 
-(.on video-system "change:timeUpdate"
+#_ (.on video-system "change:timeUpdate"
      (fn [model t]
        (.log js/console t)))
 
