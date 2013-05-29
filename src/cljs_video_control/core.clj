@@ -22,7 +22,8 @@
     (hp/include-js
        "http://code.jquery.com/jquery-1.8.2.min.js"
        "http://underscorejs.org/underscore.js"
-       "http://backbonejs.org/backbone.js")]
+       "http://backbonejs.org/backbone.js")
+    (hp/include-css "css/style.css")]
    [:body
     [:div
      [:video#video
@@ -47,8 +48,9 @@
 
      [:button#bash "BASH"]]
 
-    (hp/include-js "js/manual-video.js"
-                   "js/video.js")]))
+    [:div [:p#status "init"]]
+
+    (hp/include-js "js/video.js")]))
 
 (defroutes my-routes
   (GET "/" [] (render-body))
