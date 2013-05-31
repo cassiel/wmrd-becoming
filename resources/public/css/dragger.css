@@ -6,11 +6,27 @@
 
 .droppable {
     position: absolute;
-    left: 250px;
-    top: 0;
     width: 125px;
     height: 125px;
     background: #999;
     color: #fff;
     padding: 10px;
+}
+
+#dr1 {
+    left: 250px;
+    top: 0;
+}
+
+#dr2 {
+    left: 450px;
+    top: 0;
+}
+
+.drop-active {
+    color: #ff8;
+}
+
+.drop-hover {
+    background: #44A;
 }

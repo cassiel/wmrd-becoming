@@ -158,8 +158,9 @@
 
    [:body
     [:div#main
-     [:div.droppable "Drop here"]
-     [:div.draggable "Drag me"]
+     [:div#dr1.droppable "Drop 1"]
+     [:div#dr2.droppable "Drop 2"]
+     [:div#AAA.draggable "Drag me"]
 
      [:p.status "container paragraph"]]
     (hp/include-js "js/dragger.js")]))
