@@ -1,4 +1,4 @@
-(ns video
+(ns video-backbone
   (:use [jayq.core :only [$]])
   (:require [jayq.core :as jq]))
 

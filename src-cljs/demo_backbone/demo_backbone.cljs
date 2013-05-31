@@ -1,4 +1,4 @@
-(ns demo
+(ns demo-backbone
   (:use [jayq.core :only [$]])
   (:require [jayq.core :as jq]))
 

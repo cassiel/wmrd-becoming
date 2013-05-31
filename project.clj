@@ -17,13 +17,21 @@
 
   :cljsbuild
   {:builds
-   [{:source-paths ["src-cljs/demo"]
+   [{:source-paths ["src-cljs/demo_backbone"]
      :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/demo.js"
+                :output-to "_dyn-resources/public/js/demo_backbone.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/video"]
+    {:source-paths ["src-cljs/demo_yui"]
      :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/video.js"
+                :output-to "_dyn-resources/public/js/demo_yui.js"
+                :optimizations :simple}}
+    {:source-paths ["src-cljs/video_backbone"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/video_backbone.js"
+                :optimizations :simple}}
+    {:source-paths ["src-cljs/video_yui"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/video_yui.js"
                 :optimizations :simple}}]}
 
   :ring {:port 3000
