@@ -1,0 +1,16 @@
+.draggable {
+    width: 100px;
+    height: 100px;
+    background: #ccc;
+}
+
+.droppable {
+    position: absolute;
+    left: 250px;
+    top: 0;
+    width: 125px;
+    height: 125px;
+    background: #999;
+    color: #fff;
+    padding: 10px;
+}

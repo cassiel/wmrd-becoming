@@ -32,7 +32,7 @@
         (fn [] #_ (this-as me
                        (.on me "change:playing"
                             (fn [model playing]
-                              (jq/inner ($ :#status)
+                              (jq/inner ($ "#status")
                                         (str "playing: " playing))))
                        )
           #_ (this-as me (.on me "change:timeUpdate"
@@ -62,17 +62,18 @@
    (JS> ;; Initialise by rendering the template into the DOM:
     :initialize
     (fn [] (this-as me
-                   ;; Re-render on any model change.
+                   ;; Re-render on any model change:
                    (.listenTo me
                               (.-model me)
                               "change"
                               (.-render me))
+                   ;; Initial render:
                    (.render me)))
 
     :events {"click input[type=button]" :doSearch}
 
     :doSearch
-    (fn [] (js/alert (str "Search for " (.val ($ :#search_input)))))
+    (fn [] (js/alert (str "Search for " (.val ($ "#search_input")))))
 
     :render
     ;; Compile the template using underscore
@@ -80,26 +81,26 @@
       (this-as me
                (let [location (.get (.-model me) "location")
                      template (.template js/_
-                                         (.html ($ :#search_template))
+                                         (.html ($ "#search_template"))
                                          (JS> :search_label location))]
                  (-> (.-$el me)
                      (.html template))))))))
 
 ;; Build a view: it takes a model instance as argument.
 
-(def video-view (VideoView. (JS> :el ($ :#search_container)
+(def video-view (VideoView. (JS> :el "#search_container"
                                  :model video-system)))
 
 #_ (.on video-system "change:playing"
      (fn [model playing]
-       (jq/inner ($ :#status)
+       (jq/inner ($ "#status")
                  (str "playing: " playing))))
 
 #_ (.on video-system "change:timeUpdate"
      (fn [model t]
        (.log js/console t)))
 
-(jq/bind ($ "#bash")
+#_ (jq/bind ($ "#bash")
          :click
          (fn [e] (.play video-system)))
 

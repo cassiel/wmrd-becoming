@@ -21,6 +21,10 @@
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/demo_backbone.js"
                 :optimizations :simple}}
+    {:source-paths ["src-cljs/dragger"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/dragger.js"
+                :optimizations :simple}}
     {:source-paths ["src-cljs/demo_yui"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/demo_yui.js"
@@ -29,9 +33,9 @@
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/video_backbone.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/video_yui"]
+    {:source-paths ["src-cljs/video_hybrid"]
      :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/video_yui.js"
+                :output-to "_dyn-resources/public/js/video_hybrid.js"
                 :optimizations :simple}}]}
 
   :ring {:port 3000

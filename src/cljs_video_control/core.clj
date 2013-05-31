@@ -17,7 +17,7 @@
      [:li [:a {:href "demo-yui"} "demo via YUI"]]
 
      [:li [:a {:href "video-backbone"} "video control tests via backbone.js"]]
-     [:li [:a {:href "video-yui"} "video control tests via YUI"]]]]))
+     [:li [:a {:href "video-hybrid"} "video control tests via backbone/YUI hybrid"]]]]))
 
 (defn render-demo-backbone []
   (hp/html5
@@ -41,7 +41,13 @@
     (hp/include-js "http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js")]
 
    [:body
+    ;; Template for YUI templater:
+    [:script {:type "text/template"}
+     [:p#my-paraxxx "originalxxx"]]
+
     [:h2 "YUI"]
+
+    [:div#myapp-app [:p#my-para "initial"]]
 
     [:p [:button#clickable-event "Click to trigger an alert from basic YUI event"]]
 
@@ -56,6 +62,7 @@
        "http://backbonejs.org/backbone.js")
     (hp/include-css "css/style.css")]
    [:body
+    ;; Template for underscore.js:
     [:script#search_template {:type "text/template"}
      [:label "<%= search_label %>"]
      [:input#search_input {:type "text"}]
@@ -90,17 +97,24 @@
 
     (hp/include-js "js/video_backbone.js")]))
 
-(defn render-video-yui
-  "YUI-based version of the video test."
+(defn render-video-hybrid
+  "YUI-event-based version of the video test."
   []
   (hp/html5
    [:head
     (hp/include-js
        "http://code.jquery.com/jquery-1.8.2.min.js"
        "http://underscorejs.org/underscore.js"
-       "http://backbonejs.org/backbone.js")
+       "http://backbonejs.org/backbone.js"
+       "http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js")
     (hp/include-css "css/style.css")]
    [:body
+    ;; Template for underscore.js:
+    [:script#search_template {:type "text/template"}
+     [:label "<%= search_label %>"]
+     [:input#search_input {:type "text"}]
+     [:input#search_button {:type "button" :value "Search"}]]
+
     [:div
      [:video#video
       {:controls 1
@@ -128,15 +142,35 @@
 
     [:div#search_container]
 
-    (hp/include-js "js/video_yui.js")])
-  )
+    (hp/include-js "js/video_hybrid.js")]))
+
+(defn render-dragger
+  "backbone/jQuery drag-and-drop example."
+  []
+  (hp/html5
+   [:head
+    (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
+                    "css/dragger.css")
+    (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
+                   "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+                   "http://underscorejs.org/underscore.js"
+                   "http://backbonejs.org/backbone.js")]
+
+   [:body
+    [:div#main
+     [:div.droppable "Drop here"]
+     [:div.draggable "Drag me"]
+
+     [:p.status "container paragraph"]]
+    (hp/include-js "js/dragger.js")]))
 
 (defroutes my-routes
   (GET "/" [] (render-index))
   (GET "/demo-backbone" [] (render-demo-backbone))
   (GET "/demo-yui" [] (render-demo-yui))
   (GET "/video-backbone" [] (render-video-backbone))
-  (GET "/video-yui" [] (render-video-yui))
+  (GET "/video-hybrid" [] (render-video-hybrid))
+  (GET "/dragger" [] (render-dragger))
   (route/resources "/" {:root "public"}))
 
 (def app
