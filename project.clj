@@ -33,9 +33,9 @@
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/video_backbone.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/video_hybrid"]
+    {:source-paths ["src-cljs/video_framing"]
      :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/video_hybrid.js"
+                :output-to "_dyn-resources/public/js/video_framing.js"
                 :optimizations :simple}}]}
 
   :ring {:port 3000

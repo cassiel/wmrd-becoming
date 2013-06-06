@@ -5,19 +5,33 @@
             [hiccup.page :as hp]
             [hiccup.util :as hu]))
 
+(defn standard-head [title]
+  [:head
+    [:title title]
+    [:meta  {:name "viewport"
+             :content "width=device-width, initial-scale=1.0"}]
+    (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
+                    "css/bootstrap.min.css"
+                    "css/style.css")
+    (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
+                   "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+                   "http://underscorejs.org/underscore.js"
+                   "http://backbonejs.org/backbone.js")])
+
 (defn render-index []
   (hp/html5
-   [:head]
+   (standard-head "Index")
 
    [:body
-    [:h2 "Other Pages"]
+    [:div.container
+     [:h2 "Demo Pages"]
 
-    [:ul
-     [:li [:a {:href "demo-backbone"} "demo via backbone.js"]]
-     [:li [:a {:href "demo-yui"} "demo via YUI"]]
-
-     [:li [:a {:href "video-backbone"} "video control tests via backbone.js"]]
-     [:li [:a {:href "video-hybrid"} "video control tests via backbone/YUI hybrid"]]]]))
+     [:ul
+      [:li [:a {:href "demo-backbone"} "demo via backbone.js"]]
+      [:li [:a {:href "demo-yui"} "demo via YUI"] " (deprecated)"]
+      [:li [:a {:href "video-backbone"} "video control tests via backbone.js"]]
+      [:li [:a {:href "video-framing"} "video frame selection tests"]]
+      [:li [:a {:href "dragger"} "drag-and-drop example"]]]]]))
 
 (defn render-demo-backbone []
   (hp/html5
@@ -97,52 +111,25 @@
 
     (hp/include-js "js/video_backbone.js")]))
 
-(defn render-video-hybrid
-  "YUI-event-based version of the video test."
-  []
+(defn render-video-framing []
   (hp/html5
-   [:head
-    (hp/include-js
-       "http://code.jquery.com/jquery-1.8.2.min.js"
-       "http://underscorejs.org/underscore.js"
-       "http://backbonejs.org/backbone.js"
-       "http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js")
-    (hp/include-css "css/style.css")]
-   [:body
-    ;; Template for underscore.js:
-    [:script#search_template {:type "text/template"}
-     [:label "<%= search_label %>"]
-     [:input#search_input {:type "text"}]
-     [:input#search_button {:type "button" :value "Search"}]]
+   (standard-head "Video Framing")
 
-    [:div
+   [:body
+    [:div.container
+     [:h2 "Draggable Frame"]
      [:video#video
       {:controls 1
        :preload "none"
        :poster "http://media.w3.org/2010/05/sintel/poster.png"}
       [:source#mp4
        {:src "http://media.w3.org/2010/05/sintel/trailer.mp4"
-        :type "video/mp4"}]]]
+        :type "video/mp4"}]]
 
-    [:div#buttons
-     [:button {:onclick "document._video.load()"} "load()"]
-     [:button {:onclick "document._video.play()"} "play()"]
-     [:button {:onclick "document._video.pause()"} "pause()"]
-     [:button {:onclick "document._video.currentTime+=10"} "currentTime+=10"]
-     [:button {:onclick "document._video.currentTime-=10"} "currentTime-=10"]
-     [:button {:onclick "document._video.currentTime=50"} "currentTime=50"]
-     [:button {:onclick "document._video.playbackRate++"} "playbackRate++"]
-     [:button {:onclick "document._video.playbackRate--"} "playbackRate--"]
-     [:button {:onclick "document._video.playbackRate+=0.1"} "playbackRate+=0.1"]
-     [:button {:onclick "document._video.playbackRate-=0.1"} "playbackRate-=0.1"]
+     [:div#draggable]]
 
-     [:button#bash "BASH"]]
-
-    [:div [:p#status "init"]]
-
-    [:div#search_container]
-
-    (hp/include-js "js/video_hybrid.js")]))
+    (hp/include-js "js/video_framing.js"
+                   "js/bootstrap.min.js")]))
 
 (defn render-dragger
   "backbone/jQuery drag-and-drop example."
@@ -170,7 +157,7 @@
   (GET "/demo-backbone" [] (render-demo-backbone))
   (GET "/demo-yui" [] (render-demo-yui))
   (GET "/video-backbone" [] (render-video-backbone))
-  (GET "/video-hybrid" [] (render-video-hybrid))
+  (GET "/video-framing" [] (render-video-framing))
   (GET "/dragger" [] (render-dragger))
   (route/resources "/" {:root "public"}))
 

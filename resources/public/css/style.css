@@ -1,3 +1,13 @@
-video {
+#video {
+    /*position: absolute;*/
     height: 240px;
+    top: 50px;
+    left: 50px;
+}
+
+#draggable {
+    /*position: absolute;*/
+    /* height, width and actual position set in JS. */
+    background: #FFF;
+    opacity: 0.5;
 }
