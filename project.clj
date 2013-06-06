@@ -25,6 +25,10 @@
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/dragger.js"
                 :optimizations :simple}}
+    {:source-paths ["src-cljs/search_template"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/search_template.js"
+                :optimizations :simple}}
     {:source-paths ["src-cljs/demo_yui"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/demo_yui.js"

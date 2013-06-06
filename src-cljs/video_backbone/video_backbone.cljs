@@ -2,22 +2,6 @@
   (:use [jayq.core :only [$]])
   (:require [jayq.core :as jq]))
 
-; ALERT ON CLICK
-; Rewrite of http://backbonejs.org/#Events
-(def o {})
-
-(.extend js/_ o Backbone.Events)
-
-(.on o "alert"
-     (fn [msg] (js/alert msg)))
-
-(.on o "play"
-     (fn [] (.play (.-_video js/document))))
-
-#_ (jq/bind ($ "#bash")
-         :click
-         (fn [e] (.trigger o "play")))
-
 (defn JS>
   "Inline key-value args to Javascript map."
   [& args]
@@ -29,30 +13,40 @@
   (.extend
    Backbone.Model
    (JS> :initialize
-        (fn [] #_ (this-as me
-                       (.on me "change:playing"
-                            (fn [model playing]
-                              (jq/inner ($ "#status")
-                                        (str "playing: " playing))))
-                       )
-          #_ (this-as me (.on me "change:timeUpdate"
-                              (fn [model t]
-                                (.log js/console t)))))
+        (fn [] nil)
+
+        :load
+        (fn [] (this-as me
+                       (.load (.get me "video"))))
 
         :play
-        (fn [] (this-as me (.set me (JS> :playing true))))
+        (fn [] (this-as me
+                       (.play (.get me "video"))
+                       (.set me (JS> :playing true))))
 
-        :stop
-        (fn [] (this-as me (.set me (JS> :playing false))))
+        :pause
+        (fn [] (this-as me
+                       (.pause (.get me "video"))
+                       (.set me (JS> :playing false))))
+
+        :jump
+        (fn [pos] (this-as me
+                          (set! (.-currentTime (.get me "video")) pos)))
 
         :timeUpdate
-        (fn [t] (this-as me (.set me (JS> :location t))))
+        (fn [] (this-as me
+                       (let [t (.-currentTime (.get me "video"))]
+                         (.log js/console t)
+                         (this-as me (.set me (JS> :location t))))))
 
         ;; defaults can also be a function.
         :defaults {:playing false
                    :location 0.0})))
 
-(def video-system (VideoSystem.))
+(defn on-model
+  "Given `f` (which takes a model), return a function which wraps up the view as `this`."
+  [f & args]
+  #(this-as view (apply f (.-model view) args)))
 
 ;; The view (and, erm, controller):
 
@@ -70,49 +64,42 @@
                    ;; Initial render:
                    (.render me)))
 
-    :events {"click input[type=button]" :doSearch}
-
-    :doSearch
-    (fn [] (js/alert (str "Search for " (.val ($ "#search_input")))))
+    ;; Events generally go into the model.
+    :events
+    {"click #play" (on-model #(.play %))
+     "click #load" (on-model #(.load %))
+     "click #pause" (on-model #(.pause %))
+     "click #jump10" (on-model #(.jump % 10))}
 
     :render
-    ;; Compile the template using underscore
-    (fn []
-      (this-as me
-               (let [location (.get (.-model me) "location")
-                     template (.template js/_
-                                         (.html ($ "#search_template"))
-                                         (JS> :search_label location))]
-                 (-> (.-$el me)
-                     (.html template))))))))
+    (fn [] nil))))
 
-;; Build a view: it takes a model instance as argument.
-
-(def video-view (VideoView. (JS> :el "#search_container"
-                                 :model video-system)))
-
-#_ (.on video-system "change:playing"
-     (fn [model playing]
-       (jq/inner ($ "#status")
-                 (str "playing: " playing))))
-
-#_ (.on video-system "change:timeUpdate"
-     (fn [model t]
-       (.log js/console t)))
-
-#_ (jq/bind ($ "#bash")
-         :click
-         (fn [e] (.play video-system)))
-
-;; Set listeners on the video object, triggering model calls into backbone:
-
-(defn listen-timeupdate [v]
+(defn listen-timeupdate [model v]
   (.addEventListener v
                      "timeupdate"
-                     (fn [e] (.timeUpdate video-system (.-currentTime v)))
+                     (fn [e] (.timeUpdate model))
                      false))
 
-(jq/document-ready (fn []
-                     (let [v (.getElementById js/document "video")]
-                       (listen-timeupdate v)
-                       (set! (.-_video js/document) v))))
+;; This is rather nasty: we need to keep `model` and `view` accessible otherwise
+;; the events set up in the view break. Same for the video object pulled from the DOM
+;; as well, I expect.
+
+;; It seems a bit daft that we have to attach the video object as a (trackable)
+;; parameter rather than a plain Clojure parameter, but the structure setup is
+;; obviously a little subtle.
+
+(def STATE
+  (let [v (.getElementById js/document "video")
+        model (VideoSystem. (JS> :video v))
+        view (VideoView. (JS> :el ".container"
+                              :model model))]
+    (JS> :video v
+         :model model
+         :view view)))
+
+(defn go []
+  (set! (.-_video js/document) (.-video STATE))
+  (listen-timeupdate (.-model STATE)
+                     (.-video STATE)))
+
+(jq/document-ready go)
