@@ -1,39 +1,28 @@
 (ns dragger
   (:use [jayq.core :only [$]])
-  (:require [jayq.core :as jq]))
-
-(defn JS>
-  "Inline key-value args to Javascript map."
-  [& args]
-  (clj->js (apply hash-map args)))
-
-;; Direct jQuery UI setup:
-;;(.draggable ($ "#draggable"))
-;;(.droppable ($ "#droppable") (JS> :drop (fn [] (js/alert "dropped"))
-;;                                  :tolerance "pointer"))
-
-;; MVC-based setup:
+  (:require [jayq.core :as jq]
+            [lib :as lib]))
 
 (def Model
   (.extend
    Backbone.Model
-   (JS> :initialize (fn [])
+   (lib/JS> :initialize (fn [])
 
-        :defaults {:my-value 42})))
+            :defaults {:my-value 42})))
 
 (def model (Model.))
 
 (def View
   (.extend
    Backbone.View
-   (JS> :initialize
+   (lib/JS> :initialize
         (fn [] (this-as me
                        ;; jQuery UI setup (we set up listeners in the events hash):
                        (.draggable (.$ me ".draggable")
-                                   (JS> :helper "clone"
+                                   (lib/JS> :helper "clone"
                                         :opacity 0.25))
                        (.droppable (.$ me ".droppable")
-                                   (JS> :tolerance "pointer"
+                                   (lib/JS> :tolerance "pointer"
                                         :activeClass "drop-active"
                                         :hoverClass "drop-hover"))
 
@@ -60,5 +49,5 @@
                        (-> (.$ me ".status")
                            (.html "BOG")))))))
 
-(def view (View. (JS> :el "#main"
-                      :model model)))
+(def view (View. (lib/JS> :el "#main"
+                          :model model)))

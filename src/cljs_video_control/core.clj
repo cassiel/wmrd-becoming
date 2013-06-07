@@ -28,7 +28,6 @@
 
      [:ul
       [:li [:a {:href "demo-backbone"} "demo via backbone.js"]]
-      [:li [:a {:href "demo-yui"} "demo via YUI"] " (deprecated)"]
       [:li [:a {:href "video-backbone"} "video control tests via backbone.js"]]
       [:li [:a {:href "video-framing"} "video frame selection tests"]]
       [:li [:a {:href "range-slider"} "simple range slider"]]
@@ -37,17 +36,14 @@
 
 (defn render-demo-backbone []
   (hp/html5
-   [:head
-    (hp/include-js
-     "http://code.jquery.com/jquery-1.8.2.min.js"
-     "http://underscorejs.org/underscore.js"
-     "http://backbonejs.org/backbone.js")]
+   (standard-head "Backbone Demo")
 
    [:body
-    [:h2 "backbone.js"]
+    [:div.container
+     [:h2 "backbone.js"]
 
-    [:p [:button#clickable-event "Click to trigger an alert from basic Backbone event"]]
-    [:p [:button#clickable-color "Click to change background color"]]
+     [:p [:button#clickable-event "Click to trigger an alert from basic Backbone event"]]
+     [:p [:button#clickable-color "Click to change background color"]]]
 
     (hp/include-js "js/demo_backbone.js")]))
 
@@ -120,8 +116,7 @@
 
      [:div#draggable]]
 
-    (hp/include-js "js/video_framing.js"
-                   "js/bootstrap.min.js")]))
+    (hp/include-js "js/video_framing.js")]))
 
 (defn render-range-slider []
   (hp/html5
@@ -140,46 +135,25 @@
                            [:thead [:tr [:th "Min"] [:th "Max"]]]
                            [:tbody [:tr [:td#min "min"] [:td#max "max"]]]]]]]
 
-    (hp/include-js "js/range_slider.js"
-                   "js/bootstrap.min.js")]))
-
-(defn render-demo-yui []
-  (hp/html5
-   [:head
-    (hp/include-js "http://yui.yahooapis.com/3.10.1/build/yui/yui-min.js")]
-
-   [:body
-    ;; Template for YUI templater:
-    [:script {:type "text/template"}
-     [:p#my-paraxxx "originalxxx"]]
-
-    [:h2 "YUI"]
-
-    [:div#myapp-app [:p#my-para "initial"]]
-
-    [:p [:button#clickable-event "Click to trigger an alert from basic YUI event"]]
-
-    (hp/include-js "js/demo_yui.js")]))
+    (hp/include-js "js/range_slider.js")]))
 
 (defn render-dragger
   "backbone/jQuery drag-and-drop example."
   []
   (hp/html5
-   [:head
-    (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
-                    "css/dragger.css")
-    (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
-                   "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
-                   "http://underscorejs.org/underscore.js"
-                   "http://backbonejs.org/backbone.js")]
+   (standard-head "Drag and Drop")
 
    [:body
-    [:div#main
+    [:div#main.container
+     [:h2 "Drag and Drop"]
+
      [:div#dr1.droppable "Drop 1"]
      [:div#dr2.droppable "Drop 2"]
-     [:div#AAA.draggable "Drag me"]
+     [:div#AAA.draggable "Drag me"]]
 
+    [:div
      [:p.status "container paragraph"]]
+
     (hp/include-js "js/dragger.js")]))
 
 (defroutes my-routes
