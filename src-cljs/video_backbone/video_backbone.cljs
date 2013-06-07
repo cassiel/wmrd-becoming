@@ -1,59 +1,51 @@
 (ns video-backbone
   (:use [jayq.core :only [$]])
-  (:require [jayq.core :as jq]))
-
-(defn JS>
-  "Inline key-value args to Javascript map."
-  [& args]
-  (clj->js (apply hash-map args)))
+  (:require [jayq.core :as jq]
+            [lib :as lib]))
 
 ;; Do this as a proper backbone.js model:
 
 (def VideoSystem
   (.extend
    Backbone.Model
-   (JS> :initialize
-        (fn [] nil)
+   (lib/JS>
+    :initialize
+    (fn [] nil)
 
-        :load
-        (fn [] (this-as me
-                       (.load (.get me "video"))))
+    :load
+    (fn [] (this-as me
+                   (.load (.get me "video"))))
 
-        :play
-        (fn [] (this-as me
-                       (.play (.get me "video"))
-                       (.set me (JS> :playing true))))
+    :play
+    (fn [] (this-as me
+                   (.play (.get me "video"))
+                   (.set me (lib/JS> :playing true))))
 
-        :pause
-        (fn [] (this-as me
-                       (.pause (.get me "video"))
-                       (.set me (JS> :playing false))))
+    :pause
+    (fn [] (this-as me
+                   (.pause (.get me "video"))
+                   (.set me (lib/JS> :playing false))))
 
-        :jump
-        (fn [pos] (this-as me
-                          (set! (.-currentTime (.get me "video")) pos)))
+    :jump
+    (fn [pos] (this-as me
+                      (set! (.-currentTime (.get me "video")) pos)))
 
-        :timeUpdate
-        (fn [] (this-as me
-                       (let [t (.-currentTime (.get me "video"))]
-                         (.log js/console t)
-                         (this-as me (.set me (JS> :location t))))))
+    :timeUpdate
+    (fn [] (this-as me
+                   (let [t (.-currentTime (.get me "video"))]
+                     (.log js/console t)
+                     (this-as me (.set me (lib/JS> :location t))))))
 
-        ;; defaults can also be a function.
-        :defaults {:playing false
-                   :location 0.0})))
-
-(defn on-model
-  "Given `f` (which takes a model), return a function which wraps up the view as `this`."
-  [f & args]
-  #(this-as view (apply f (.-model view) args)))
+    ;; defaults can also be a function.
+    :defaults {:playing false
+               :location 0.0})))
 
 ;; The view (and, erm, controller):
 
 (def VideoView
   (.extend
    Backbone.View
-   (JS> ;; Initialise by rendering the template into the DOM:
+   (lib/JS> ;; Initialise by rendering the template into the DOM:
     :initialize
     (fn [] (this-as me
                    ;; Re-render on any model change:
@@ -66,10 +58,10 @@
 
     ;; Events generally go into the model.
     :events
-    {"click #play" (on-model #(.play %))
-     "click #load" (on-model #(.load %))
-     "click #pause" (on-model #(.pause %))
-     "click #jump10" (on-model #(.jump % 10))}
+    {"click #play" (lib/on-model-and-view #(.play %1))
+     "click #load" (lib/on-model-and-view #(.load %1))
+     "click #pause" (lib/on-model-and-view #(.pause %1))
+     "click #jump10" (lib/on-model-and-view #(.jump %1 10))}
 
     :render
     (fn [] nil))))
@@ -90,12 +82,12 @@
 
 (def STATE
   (let [v (.getElementById js/document "video")
-        model (VideoSystem. (JS> :video v))
-        view (VideoView. (JS> :el ".container"
-                              :model model))]
-    (JS> :video v
-         :model model
-         :view view)))
+        model (VideoSystem. (lib/JS> :video v))
+        view (VideoView. (lib/JS> :el ".container"
+                                  :model model))]
+    (lib/JS> :video v
+             :model model
+             :view view)))
 
 (defn go []
   (set! (.-_video js/document) (.-video STATE))

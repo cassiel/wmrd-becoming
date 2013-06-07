@@ -17,27 +17,31 @@
 
   :cljsbuild
   {:builds
-   [{:source-paths ["src-cljs/demo_backbone"]
+   [{:source-paths ["src-cljs/lib" "src-cljs/demo_backbone"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/demo_backbone.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/dragger"]
+    {:source-paths ["src-cljs/lib" "src-cljs/dragger"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/dragger.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/search_template"]
+    {:source-paths ["src-cljs/lib" "src-cljs/search_template"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/search_template.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/demo_yui"]
+    {:source-paths ["src-cljs/lib" "src-cljs/range_slider"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/range_slider.js"
+                :optimizations :simple}}
+    {:source-paths ["src-cljs/lib" "src-cljs/demo_yui"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/demo_yui.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/video_backbone"]
+    {:source-paths ["src-cljs/lib" "src-cljs/video_backbone"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/video_backbone.js"
                 :optimizations :simple}}
-    {:source-paths ["src-cljs/video_framing"]
+    {:source-paths ["src-cljs/lib" "src-cljs/video_framing"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/video_framing.js"
                 :optimizations :simple}}]}

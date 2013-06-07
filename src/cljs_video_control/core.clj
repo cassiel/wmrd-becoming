@@ -31,6 +31,7 @@
       [:li [:a {:href "demo-yui"} "demo via YUI"] " (deprecated)"]
       [:li [:a {:href "video-backbone"} "video control tests via backbone.js"]]
       [:li [:a {:href "video-framing"} "video frame selection tests"]]
+      [:li [:a {:href "range-slider"} "simple range slider"]]
       [:li [:a {:href "search-template"} "search-template"]]
       [:li [:a {:href "dragger"} "drag-and-drop example"]]]]]))
 
@@ -122,6 +123,26 @@
     (hp/include-js "js/video_framing.js"
                    "js/bootstrap.min.js")]))
 
+(defn render-range-slider []
+  (hp/html5
+   (standard-head "Range Slider")
+
+   [:body
+    [:div.container
+     [:h2 "Range Slider"]
+
+     [:div#range_slider]
+
+     [:div {:style "height: 20px"}]
+
+     [:div.row
+      [:div.span2.offset5 [:table.table.table-bordered.table-condensed
+                           [:thead [:tr [:th "Min"] [:th "Max"]]]
+                           [:tbody [:tr [:td#min "min"] [:td#max "max"]]]]]]]
+
+    (hp/include-js "js/range_slider.js"
+                   "js/bootstrap.min.js")]))
+
 (defn render-demo-yui []
   (hp/html5
    [:head
@@ -166,6 +187,7 @@
   (GET "/demo-backbone" [] (render-demo-backbone))
   (GET "/video-backbone" [] (render-video-backbone))
   (GET "/video-framing" [] (render-video-framing))
+  (GET "/range-slider" [] (render-range-slider))
   (GET "/search-template" [] (search-template))
   (GET "/dragger" [] (render-dragger))
   (route/resources "/" {:root "public"}))
