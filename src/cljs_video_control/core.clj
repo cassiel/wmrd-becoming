@@ -2,25 +2,68 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
+            [hiccup.core :as c]
             [hiccup.page :as hp]
             [hiccup.util :as hu]))
 
-(defn standard-head [title]
-  [:head
-    [:title title]
-    [:meta  {:name "viewport"
-             :content "width=device-width, initial-scale=1.0"}]
-    (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
-                    "css/bootstrap.min.css"
-                    "css/style.css")
-    (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
-                   "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
-                   "http://underscorejs.org/underscore.js"
-                   "http://backbonejs.org/backbone.js")])
+
+(defn css-rule [rule]
+  (let [sels (reverse (rest (reverse rule)))
+        props (last rule)]
+    (str (apply str (interpose " " (map name sels)))
+         "{" (apply str (map #(str (name (key %)) ": " (val %) ";") props)) "}\n")))
+
+(defn css
+  [& rules]
+  (c/html [:style {:type "text/css"}
+           (apply str (map css-rule rules))]))
+
+(def CSS-ENTRIES
+  {:standard [[:#video {:height "240px"
+                        :top "50px"
+                        :left "50px"}]
+              [:#draggable {:background "#FFF"
+                            :opacity 0.5}]]
+
+   :dragger [[:.draggable {:width "100px"
+                           :height "100px"
+                           :background "#CCC"}]
+             [:.droppable { ;;:position "absolute"
+                           :width "125px"
+                           :height "125px"
+                           :background "#999"
+                           :color "#FFF"
+                           :padding "10px"}]
+             [:#dr1 {:left "250px"
+                     :top 0}]
+             [:#dr2 {:left "450px"
+                     :top 0}]
+             [:.drop-active {:color "#FF8"}]
+             [:.drop-hover {:background "#44A"}]]
+
+   :other [[:.foo {:height "50px"}]]})
+
+(defn standard-head [title & css-stems]
+  (as-> [:head
+         [:title title]
+         [:meta {:name "viewport"
+                 :content "width=device-width, initial-scale=1.0"}]
+         (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
+                         "css/bootstrap.min.css")]
+        H
+
+        (vec (reduce (fn [l x] (conj l (apply css (get CSS-ENTRIES x))))
+                     H
+                     (cons :standard css-stems)))
+
+        (conj H (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
+                               "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+                               "http://underscorejs.org/underscore.js"
+                               "http://backbonejs.org/backbone.js"))))
 
 (defn render-index []
   (hp/html5
-   (standard-head "Index")
+   (standard-head "Index" :other)
 
    [:body
     [:div.container
@@ -141,7 +184,7 @@
   "backbone/jQuery drag-and-drop example."
   []
   (hp/html5
-   (standard-head "Drag and Drop")
+   (standard-head "Drag and Drop" :dragger)
 
    [:body
     [:div#main.container
