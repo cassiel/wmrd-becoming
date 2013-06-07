@@ -18,13 +18,14 @@
    (lib/JS> :initialize
         (fn [] (this-as me
                        ;; jQuery UI setup (we set up listeners in the events hash):
-                       (.draggable (.$ me ".draggable")
+                       (.draggable (.$ me ".row .draggable")
                                    (lib/JS> :helper "clone"
-                                        :opacity 0.25))
-                       (.droppable (.$ me ".droppable")
+                                            :opacity 0.7
+                                            ))
+                       (.droppable (.$ me ".row div table tbody tr .droppable")
                                    (lib/JS> :tolerance "pointer"
-                                        :activeClass "drop-active"
-                                        :hoverClass "drop-hover"))
+                                            :activeClass "drop-active"
+                                            :hoverClass "drop-hover"))
 
                        ;; Listen to the model:
                        (.listenTo me
@@ -45,9 +46,7 @@
 
         :render
         (fn [] (this-as me
-                       (.log js/console "rendering...")
-                       (-> (.$ me ".status")
-                           (.html "BOG")))))))
+                       (.log js/console "rendering..."))))))
 
-(def view (View. (lib/JS> :el "#main"
+(def view (View. (lib/JS> :el "#main-enclosure"
                           :model model)))

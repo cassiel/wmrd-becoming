@@ -23,22 +23,19 @@
                         :top "50px"
                         :left "50px"}]
               [:#draggable {:background "#FFF"
-                            :opacity 0.5}]]
+                            ;;:opacity 0.9
+                            }]]
 
-   :dragger [[:.draggable {:width "100px"
-                           :height "100px"
+   :dragger [[:.draggable {;; :height "50px"
                            :background "#CCC"}]
-             [:.droppable { ;;:position "absolute"
-                           :width "125px"
-                           :height "125px"
+             [:td {:height "50px"
+                      }]
+             ;; When dragging, the clone doesn't have a width:
+             [:.ui-draggable-dragging {:width "60px"}]
+             [:.droppable {;;:height "50px"
                            :background "#999"
-                           :color "#FFF"
-                           :padding "10px"}]
-             [:#dr1 {:left "250px"
-                     :top 0}]
-             [:#dr2 {:left "450px"
-                     :top 0}]
-             [:.drop-active {:color "#FF8"}]
+                           :color "#FFF"}]
+             [:.drop-active {:color "#44F"}]
              [:.drop-hover {:background "#44A"}]]
 
    :other [[:.foo {:height "50px"}]]})
@@ -187,15 +184,23 @@
    (standard-head "Drag and Drop" :dragger)
 
    [:body
-    [:div#main.container
+    [:div.container
      [:h2 "Drag and Drop"]
 
-     [:div#dr1.droppable "Drop 1"]
-     [:div#dr2.droppable "Drop 2"]
-     [:div#AAA.draggable "Drag me"]]
+     [:div#main-enclosure
+      [:div.row
+       [:div.span10.offset1
+        [:table.table.table-bordered.table-condensed
+         ;; Make the TDs droppable:
+         [:tbody [:tr (for [i (range 10)] [:td.droppable i])]]]]]
 
-    [:div
-     [:p.status "container paragraph"]]
+      [:div.row
+       (for [i (range 6)] [(if (zero? i)
+                             :div.span1.offset3
+                             :div.span1)
+                           ;; Make the entire tables draggable:
+                           [:table.table.table-bordered.table-condensed.draggable
+                            [:tbody [:tr [:td "X"]]]]])]]]
 
     (hp/include-js "js/dragger.js")]))
 
