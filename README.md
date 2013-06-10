@@ -4,6 +4,8 @@
 
 This project is a collection of test pages for a video selection and control system currently under construction for [Wayne McGregor|Random Dance](http://www.randomdance.org). While the final system is going to be quite complex, I've built a collection of demo pages to test various isolated components; these should be independent and reasonably easy to understand. The demos include on-page sliders, drag-and-drop, and assorted random element rewriting.
 
+The examples are in no particular order, and vary in sophistication; later examples use utility code and minor refinements developed along the way and not present in the earlier ones, so do examine them all!
+
 The code here draws on a [ClojureScript and Backbone project](https://github.com/konrad-garus/hello-clj-backbone) by Konrad Garus, but implements a series of complete Backbone MVC stacks, rather than doing the event capture by hand.
 
 ## Technologies

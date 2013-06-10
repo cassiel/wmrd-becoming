@@ -3,7 +3,8 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [hiccup.page :as hp])
-  (:require [cljs-video-control.css :as css]))
+  (:require (cljs-video-control [css :as css]
+                                [layout :as lx])))
 
 (defn standard-head [title & css-stems]
   (as-> [:head
@@ -43,10 +44,10 @@
             "a simple range slider"]]
 
       [:li [:a {:href "search-template"}
-            "search-template"]]
+            "a simple search and templating test"]]
 
       [:li [:a {:href "dragger"}
-            "drag-and-drop example"]]]]]))
+            "a simple drag-and-drop example"]]]]]))
 
 (defn render-demo-backbone []
   (hp/html5
@@ -86,16 +87,19 @@
    [:body
     [:div.container
      [:h2 "Video Control"]
-     [:div
-      [:video#video
-       {:controls 1
-        :preload "none"
-        :poster "http://media.w3.org/2010/05/sintel/poster.png"}
-       [:source#mp4
-        {:src "http://media.w3.org/2010/05/sintel/trailer.mp4"
-         :type "video/mp4"}]]]
 
-     [:div#buttons
+     [:div.row
+      [:div.span12
+       [:div.vdiv
+        [:video#video
+         {:controls 1
+          :preload "none"
+          :poster "http://media.w3.org/2010/05/sintel/poster.png"}
+         [:source#mp4
+          {:src "http://media.w3.org/2010/05/sintel/trailer.mp4"
+           :type "video/mp4"}]]]]]
+
+     #_ [:div#buttons
       [:button {:onclick "document._video.load()"} "load()"]
       [:button {:onclick "document._video.play()"} "play()"]
       [:button {:onclick "document._video.pause()"} "pause()"]
@@ -107,11 +111,10 @@
       [:button {:onclick "document._video.playbackRate+=0.1"} "playbackRate+=0.1"]
       [:button {:onclick "document._video.playbackRate-=0.1"} "playbackRate-=0.1"]]
 
-     [:div
-      [:button#load "LOAD"]
-      [:button#play "PLAY"]
-      [:button#pause "PAUSE"]
-      [:button#jump10 "JUMP10"]]]
+    (lx/format-row [1 [:button#load "LOAD"]]
+                   [1 [:button#play "PLAY"]]
+                   [1 [:button#pause "PAUSE"]]
+                   [1 [:button#jump10 "JUMP10"]])]
 
     (hp/include-js "js/video_backbone.js")]))
 

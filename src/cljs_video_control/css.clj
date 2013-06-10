@@ -13,9 +13,10 @@
            (apply str (map css-rule rules))]))
 
 (def standard
-  (css [:#video {:height "240px"
-                 :top "50px"
-                 :left "50px"}]
+  (css [:#video {:width "400px"}]
+       [:.vdiv {:width "400px"
+                :margin-left "auto"
+                :margin-right "auto"}]
        [:#draggable {:background "#FFF"
                      :opacity 0.25}]
        [:input#search_input {:width "100%"}]))

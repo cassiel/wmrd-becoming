@@ -1,14 +1,9 @@
-(ns user
-  (:require (cljs-video-control [core :as core])))
+(ns cljs-video-control.layout)
 
-(defn foo [& args] (apply hash-map args))
-
-(foo :A 3 :B 4)
-
-(name :A)
-(name "A")
-
-(defn format-it [& items]
+(defn format-row
+  "Format a set of divs into a row. The args pair span with data.
+   TODO: add additional id/class fragments?"
+  [& items]
   (let [total (reduce + (map first items))
         offset (int (/ (- 12 total) 2))
         mk-tag (fn [i width] (keyword (if (zero? i)
@@ -19,9 +14,5 @@
                   [(inc i) (cons [(mk-tag i width) content] lst)])
                 [0 nil]
                 items)]
-    (reverse items)))
 
-(format-it [2 "A"]
-           [2 "B"]
-           [2 "C"]
-           [2 "D"])
+    [:div.row (reverse items)]))
