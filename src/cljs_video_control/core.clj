@@ -111,10 +111,22 @@
       [:button {:onclick "document._video.playbackRate+=0.1"} "playbackRate+=0.1"]
       [:button {:onclick "document._video.playbackRate-=0.1"} "playbackRate-=0.1"]]
 
-    (lx/format-row [1 [:button#load "LOAD"]]
-                   [1 [:button#play "PLAY"]]
-                   [1 [:button#pause "PAUSE"]]
-                   [1 [:button#jump10 "JUMP10"]])]
+     [:div {:style "height: 20px"}]
+
+     (lx/format-row 12
+                    ;; slight hack: the button text is an index to the videos in the JS.
+                    [2 [:button#select.v "sintel"]]
+                    [2 [:button#select.v "bunny"]]
+                    [2 [:button#select.v "movie"]]
+                    [2 [:button#select.v "video"]])
+
+     [:div {:style "height: 10px"}]
+
+     (lx/format-row 12
+                    [2 [:button#play.v "PLAY"]]
+                    [2 [:button#pause.v "PAUSE"]]
+                    [2 [:button#jump10.v "JUMP10"]]
+                    [2 [:div]])]
 
     (hp/include-js "js/video_backbone.js")]))
 

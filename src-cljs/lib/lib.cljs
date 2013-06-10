@@ -7,7 +7,8 @@
   (clj->js (apply hash-map args)))
 
 (defn on-model-and-view
-  "Given `f` (which takes a model and a view, then optional extra args), return a function
-   which wraps up the view as `this`."
-  [f & args]
-  #(this-as view (apply f (.-model view) view args)))
+  "Given `f` (which takes a model and a view, then optional args passed in by backbone's
+   event machinery), return a function which wraps up the view as `this`, so that
+   %1 is model, %2 is view."
+  [f]
+  (fn [& e] (this-as view (apply f (.-model view) view e))))

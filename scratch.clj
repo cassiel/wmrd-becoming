@@ -11,7 +11,8 @@
 (defn format-it [& items]
   (let [total (reduce + (map first items))
         offset (int (/ (- 12 total) 2))
-        mk-tag (fn [i width] (keyword (if (zero? i)
+        mk-tag (fn [i width] (keyword (if (and (zero? i)
+                                              (pos? offset))
                                        (str "div.span" width ".offset" offset)
                                        (str "div.span" width))))
         [c items]

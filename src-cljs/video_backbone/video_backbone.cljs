@@ -3,6 +3,23 @@
   (:require [jayq.core :as jq]
             [lib :as lib]))
 
+(def VIDEOS {:sintel ["http://media.w3.org/2010/05/sintel/poster.png"
+                      "http://media.w3.org/2010/05/sintel/trailer.mp4"]
+             :bunny ["http://media.w3.org/2010/05/bunny/poster.png"
+                     "http://media.w3.org/2010/05/bunny/trailer.mp4"]
+             :movie ["http://media.w3.org/2010/05/bunny/poster.png"
+                     "http://media.w3.org/2010/05/bunny/movie.mp4"]
+             :video ["http://media.w3.org/2010/05/video/poster.png"
+                     "http://media.w3.org/2010/05/video/movie_300.mp4"]})
+
+(defn- switch-video
+  [model mp4src tag]
+  (let [v (.get model "video")
+        [poster-name video-name] (VIDEOS (keyword tag))]
+    (.setAttribute v "poster" poster-name)
+    (.setAttribute mp4src "src" video-name)
+    (set! (.-muted v) true)))
+
 ;; Do this as a proper backbone.js model:
 
 (def VideoSystem
@@ -10,7 +27,17 @@
    Backbone.Model
    (lib/JS>
     :initialize
-    (fn [] nil)
+    (fn []
+      ;; Turn off the sound for the test movies:
+      #_ (this-as me (.select me "sintel"))
+      )
+
+    :select
+    (fn [tag]
+      (.log js/console (str "select " tag))
+      (this-as me
+               (switch-video me (.get me "mp4src") tag)
+               (.load me)))
 
     :load
     (fn [] (this-as me
@@ -48,6 +75,9 @@
    (lib/JS> ;; Initialise by rendering the template into the DOM:
     :initialize
     (fn [] (this-as me
+                   ;; Plant the jQuery for the MP4 (within our main el) into the model.
+                   ;; (This is rather nasty: should probably do it via global "$".)
+                   (.set (.-model me) (lib/JS> "mp4src" (first (.$ me "#mp4"))))
                    ;; Re-render on any model change:
                    (.listenTo me
                               (.-model me)
@@ -59,6 +89,14 @@
     ;; Events generally go into the model.
     :events
     {"click #play" (lib/on-model-and-view #(.play %1))
+
+     "click #select"
+     (lib/on-model-and-view
+      (fn [m v ev]
+        (let [text (.-innerText (.-currentTarget ev))
+              tag (keyword text)]
+          (.select m tag))))
+
      "click #load" (lib/on-model-and-view #(.load %1))
      "click #pause" (lib/on-model-and-view #(.pause %1))
      "click #jump10" (lib/on-model-and-view #(.jump %1 10))}
