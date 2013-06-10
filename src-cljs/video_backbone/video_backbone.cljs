@@ -18,6 +18,7 @@
         [poster-name video-name] (VIDEOS (keyword tag))]
     (.setAttribute v "poster" poster-name)
     (.setAttribute mp4src "src" video-name)
+      ;; Turn off the sound for the test movies:
     (set! (.-muted v) true)))
 
 ;; Do this as a proper backbone.js model:
@@ -27,10 +28,7 @@
    Backbone.Model
    (lib/JS>
     :initialize
-    (fn []
-      ;; Turn off the sound for the test movies:
-      #_ (this-as me (.select me "sintel"))
-      )
+    (fn [] nil)
 
     :select
     (fn [tag]
@@ -45,13 +43,11 @@
 
     :play
     (fn [] (this-as me
-                   (.play (.get me "video"))
-                   (.set me (lib/JS> :playing true))))
+                   (.play (.get me "video"))))
 
     :pause
     (fn [] (this-as me
-                   (.pause (.get me "video"))
-                   (.set me (lib/JS> :playing false))))
+                   (.pause (.get me "video"))))
 
     :jump
     (fn [pos] (this-as me
@@ -60,8 +56,10 @@
     :timeUpdate
     (fn [] (this-as me
                    (let [t (.-currentTime (.get me "video"))]
-                     (.log js/console t)
                      (this-as me (.set me (lib/JS> :location t))))))
+
+    :playUpdate
+    (fn [state] (this-as me (.set me (lib/JS> :playing state))))
 
     ;; defaults can also be a function.
     :defaults {:playing false
@@ -75,6 +73,8 @@
    (lib/JS> ;; Initialise by rendering the template into the DOM:
     :initialize
     (fn [] (this-as me
+                   (set! (.-$location me) (.$ me "#location"))
+                   (set! (.-$status me) (.$ me "#status"))
                    ;; Plant the jQuery for the MP4 (within our main el) into the model.
                    ;; (This is rather nasty: should probably do it via global "$".)
                    (.set (.-model me) (lib/JS> "mp4src" (first (.$ me "#mp4"))))
@@ -102,13 +102,26 @@
      "click #jump10" (lib/on-model-and-view #(.jump %1 10))}
 
     :render
-    (fn [] nil))))
+    (lib/on-model-and-view (fn [m v]
+                             (do
+                               (.html (.-$location v) (.get m "location"))
+                               (.html (.-$status v)
+                                      (if (.get m "status")
+                                        "playing" "paused"))))))))
 
 (defn listen-timeupdate [model v]
   (.addEventListener v
                      "timeupdate"
                      (fn [e] (.timeUpdate model))
                      false))
+
+(defn listen-play-pause [model v]
+  (.addEventListener v
+                     "play"
+                     (fn [e] (.playUpdate model true)))
+  (.addEventListener v
+                     "pause"
+                     (fn [e] (.playUpdate model false))))
 
 ;; This is rather nasty: we need to keep `model` and `view` accessible otherwise
 ;; the events set up in the view break. Same for the video object pulled from the DOM
@@ -128,8 +141,10 @@
              :view view)))
 
 (defn go []
-  (set! (.-_video js/document) (.-video STATE))
-  (listen-timeupdate (.-model STATE)
-                     (.-video STATE)))
+  (let [m (.-model STATE)
+        v (.-video STATE)]
+    (set! (.-_video js/document) v)       ; temporary, for debugging.
+    (listen-timeupdate m v)
+    (listen-play-pause m v)))
 
 (jq/document-ready go)

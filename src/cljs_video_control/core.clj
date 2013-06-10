@@ -126,7 +126,14 @@
                     [2 [:button#play.v "PLAY"]]
                     [2 [:button#pause.v "PAUSE"]]
                     [2 [:button#jump10.v "JUMP10"]]
-                    [2 [:div]])]
+                    [2 [:div]])
+
+     [:div {:style "height: 10px"}]
+
+     (lx/format-row 12
+                    [6 [:table.table.table-bordered.table-condensed
+                        [:thead [:tr [:th "Location"] [:th "Status"]]]
+                        [:tbody [:tr [:td#location "---"] [:td#status "---"]]]]])]
 
     (hp/include-js "js/video_backbone.js")]))
 
