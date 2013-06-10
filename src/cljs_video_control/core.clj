@@ -2,43 +2,8 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-            [hiccup.core :as c]
-            [hiccup.page :as hp]
-            [hiccup.util :as hu]))
-
-
-(defn css-rule [rule]
-  (let [sels (reverse (rest (reverse rule)))
-        props (last rule)]
-    (str (apply str (interpose " " (map name sels)))
-         "{" (apply str (map #(str (name (key %)) ": " (val %) ";") props)) "}\n")))
-
-(defn css
-  [& rules]
-  (c/html [:style {:type "text/css"}
-           (apply str (map css-rule rules))]))
-
-(def CSS-ENTRIES
-  {:standard [[:#video {:height "240px"
-                        :top "50px"
-                        :left "50px"}]
-              [:#draggable {:background "#FFF"
-                            ;;:opacity 0.9
-                            }]]
-
-   :dragger [[:.draggable {;; :height "50px"
-                           :background "#CCC"}]
-             [:td {:height "50px"
-                      }]
-             ;; When dragging, the clone doesn't have a width:
-             [:.ui-draggable-dragging {:width "60px"}]
-             [:.droppable {;;:height "50px"
-                           :background "#999"
-                           :color "#FFF"}]
-             [:.drop-active {:color "#44F"}]
-             [:.drop-hover {:background "#44A"}]]
-
-   :other [[:.foo {:height "50px"}]]})
+            [hiccup.page :as hp])
+  (:require [cljs-video-control.css :as css] :reload-all))
 
 (defn standard-head [title & css-stems]
   (as-> [:head
@@ -49,9 +14,7 @@
                          "css/bootstrap.min.css")]
         H
 
-        (vec (reduce (fn [l x] (conj l (apply css (get CSS-ENTRIES x))))
-                     H
-                     (cons :standard css-stems)))
+        (cons H (cons css/standard css-stems))
 
         (conj H (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
                                "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
@@ -60,7 +23,7 @@
 
 (defn render-index []
   (hp/html5
-   (standard-head "Index" :other)
+   (standard-head "Index" css/other)
 
    [:body
     [:div.container
@@ -181,7 +144,7 @@
   "backbone/jQuery drag-and-drop example."
   []
   (hp/html5
-   (standard-head "Drag and Drop" :dragger)
+   (standard-head "Drag and Drop" css/dragger)
 
    [:body
     [:div.container
