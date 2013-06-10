@@ -3,7 +3,7 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [hiccup.page :as hp])
-  (:require [cljs-video-control.css :as css] :reload-all))
+  (:require [cljs-video-control.css :as css]))
 
 (defn standard-head [title & css-stems]
   (as-> [:head
@@ -30,12 +30,23 @@
      [:h2 "Demo Pages"]
 
      [:ul
-      [:li [:a {:href "demo-backbone"} "demo via backbone.js"]]
-      [:li [:a {:href "video-backbone"} "video control tests via backbone.js"]]
-      [:li [:a {:href "video-framing"} "video frame selection tests"]]
-      [:li [:a {:href "range-slider"} "simple range slider"]]
-      [:li [:a {:href "search-template"} "search-template"]]
-      [:li [:a {:href "dragger"} "drag-and-drop example"]]]]]))
+      [:li [:a {:href "demo-backbone"}
+            "demo: simple examples via backbone.js"]]
+
+      [:li [:a {:href "video-backbone"}
+            "video control tests"]]
+
+      [:li [:a {:href "video-framing"}
+            "video frame selection tests"]]
+
+      [:li [:a {:href "range-slider"}
+            "a simple range slider"]]
+
+      [:li [:a {:href "search-template"}
+            "search-template"]]
+
+      [:li [:a {:href "dragger"}
+            "drag-and-drop example"]]]]]))
 
 (defn render-demo-backbone []
   (hp/html5
@@ -57,11 +68,13 @@
    [:body
     ;; Template for underscore.js:
     [:script#search_template {:type "text/template"}
-     [:label "<%= search_label %>"]
-     [:input#search_input {:type "text"}]
-     [:input#search_button {:type "button" :value "Search"}]]
+     [:div.row
+      [:div.span1.offset3 [:label "<%= search_label %>"]]
+      [:div.span4 [:input#search_input {:type "text"}]]
+      [:div.span1 [:input#search_button {:type "button" :value "Search"}]]]]
 
     [:div.container
+     [:h2 "Search Example"]
      [:div#search_container]]
 
     (hp/include-js "js/search_template.js")]))

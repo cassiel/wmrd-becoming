@@ -16,7 +16,9 @@
   (css [:#video {:height "240px"
                  :top "50px"
                  :left "50px"}]
-       [:#draggable {:background "#FFF"}]))
+       [:#draggable {:background "#FFF"
+                     :opacity 0.25}]
+       [:input#search_input {:width "100%"}]))
 
 (def dragger
   (css [:.draggable {;; :height "50px"
@@ -32,25 +34,3 @@
 
 (def other
   (css [:.foo {:height "50px"}]))
-
-(def CSS-ENTRIES
-  {:standard [[:#video {:height "240px"
-                        :top "50px"
-                        :left "50px"}]
-              [:#draggable {:background "#FFF"
-                            ;;:opacity 0.9
-                            }]]
-
-   :dragger [[:.draggable {;; :height "50px"
-                           :background "#CCC"}]
-             [:td {:height "50px"
-                      }]
-             ;; When dragging, the clone doesn't have a width:
-             [:.ui-draggable-dragging {:width "60px"}]
-             [:.droppable {;;:height "50px"
-                           :background "#000"
-                           :color "#FFF"}]
-             [:.drop-active {:color "#44F"}]
-             [:.drop-hover {:background "#44A"}]]
-
-   :other [[:.foo {:height "50px"}]]})
