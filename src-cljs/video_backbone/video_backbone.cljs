@@ -59,10 +59,12 @@
                      (this-as me (.set me (lib/JS> :location t))))))
 
     :playUpdate
-    (fn [state] (this-as me (.set me (lib/JS> :playing state))))
+    (fn [state]
+      (.log js/console (str "playUpdate: " state))
+      (this-as me (.set me (lib/JS> :status state))))
 
     ;; defaults can also be a function.
-    :defaults {:playing false
+    :defaults {:status false
                :location 0.0})))
 
 ;; The view (and, erm, controller):
@@ -109,19 +111,19 @@
                                       (if (.get m "status")
                                         "playing" "paused"))))))))
 
-(defn listen-timeupdate [model v]
+(defn listen [model v]
   (.addEventListener v
                      "timeupdate"
                      (fn [e] (.timeUpdate model))
-                     false))
-
-(defn listen-play-pause [model v]
+                     false)
   (.addEventListener v
                      "play"
-                     (fn [e] (.playUpdate model true)))
+                     (fn [e] (.playUpdate model true))
+                     false)
   (.addEventListener v
                      "pause"
-                     (fn [e] (.playUpdate model false))))
+                     (fn [e] (.playUpdate model false))
+                     false))
 
 ;; This is rather nasty: we need to keep `model` and `view` accessible otherwise
 ;; the events set up in the view break. Same for the video object pulled from the DOM
@@ -144,7 +146,6 @@
   (let [m (.-model STATE)
         v (.-video STATE)]
     (set! (.-_video js/document) v)       ; temporary, for debugging.
-    (listen-timeupdate m v)
-    (listen-play-pause m v)))
+    (listen m v)))
 
 (jq/document-ready go)
