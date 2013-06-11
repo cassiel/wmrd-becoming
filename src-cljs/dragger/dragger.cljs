@@ -18,7 +18,8 @@
         (fn [] (this-as me
                        ;; jQuery UI setup (we set up listeners in the events hash):
                        (.draggable (.$ me ".row .draggable")
-                                   (lib/JS> :helper "clone"
+                                   (lib/JS> :containment (.-$el me)
+                                            :helper "clone"
                                             :opacity 0.7))
                        (let [targets (.$ me ".row div table tbody tr .droppable-skel")]
                          (.droppable targets
@@ -44,7 +45,7 @@
                    ;; Activate a calculated selection of the droppable slots, by turning on their
                    ;; droppable style.
                    (this-as me
-                            (let [targets (.$ me ".droppable-skel")]
+                            (let [targets (nth (.$ me ".droppable-skel") 6)]
                               (.addClass targets "droppable")
                               (.droppable targets "enable"))))
 
