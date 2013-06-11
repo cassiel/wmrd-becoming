@@ -189,8 +189,8 @@
       [:div.row
        [:div.span10.offset1
         [:table.table.table-bordered.table-condensed
-         ;; Make the TDs droppable:
-         [:tbody [:tr (for [i (range 10)] [:td.droppable i])]]]]]
+         ;; Make the TDs selectively droppable in the JS.
+         [:tbody [:tr (for [i (range 10)] [:td.droppable-skel i])]]]]]
 
       [:div.row
        (for [i (range 6)] [(if (zero? i)

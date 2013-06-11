@@ -1,4 +1,5 @@
 (ns dragger
+  "Simple drag-and-drop example."
   (:use [jayq.core :only [$]])
   (:require [jayq.core :as jq]
             [lib :as lib]))
@@ -10,8 +11,6 @@
 
             :defaults {:my-value 42})))
 
-(def model (Model.))
-
 (def View
   (.extend
    Backbone.View
@@ -20,12 +19,13 @@
                        ;; jQuery UI setup (we set up listeners in the events hash):
                        (.draggable (.$ me ".row .draggable")
                                    (lib/JS> :helper "clone"
-                                            :opacity 0.7
-                                            ))
-                       (.droppable (.$ me ".row div table tbody tr .droppable")
-                                   (lib/JS> :tolerance "pointer"
-                                            :activeClass "drop-active"
-                                            :hoverClass "drop-hover"))
+                                            :opacity 0.7))
+                       (let [targets (.$ me ".row div table tbody tr .droppable-skel")]
+                         (.droppable targets
+                                     (lib/JS> :tolerance "pointer"
+                                              :activeClass "drop-active"
+                                              :hoverClass "drop-hover"))
+                         (.droppable targets "disable"))
 
                        ;; Listen to the model:
                        (.listenTo me
@@ -37,16 +37,41 @@
                        (.render me)))
 
         :events {"drag .draggable" (fn [] (.log js/console "drag"))
-                 "dragstart .draggable" (fn [] (.log js/console "dragstart"))
-                 "dragstop .draggable" (fn [] (.log js/console "dragstop"))
+
+                 "dragstart .draggable"
+                 (fn []
+                   (.log js/console "dragstart")
+                   ;; Activate a calculated selection of the droppable slots, by turning on their
+                   ;; droppable style.
+                   (this-as me
+                            (let [targets (.$ me ".droppable-skel")]
+                              (.addClass targets "droppable")
+                              (.droppable targets "enable"))))
+
+                 "dragstop .draggable"
+                 (fn []
+                   (.log js/console "dragstop")
+                   (this-as me
+                            (let [targets (.$ me ".droppable-skel")]
+                              (.removeClass targets "droppable")
+                              (.droppable targets "disable"))))
+
                  "dropactivate .droppable" (fn [] (.log js/console "dropactivate"))
+
                  "drop .droppable" (fn [e ui]
-                                     (.log js/console (str "t=" (.-id (.-target e))))
-                                     (.log js/console (str "d=" (.-id (first (.-draggable ui))))))}
+                                     (.log js/console (str "e=" (.keys js/_ e)))
+                                     (.log js/console (str "ui=" (.keys js/_ ui))))}
 
         :render
         (fn [] (this-as me
                        (.log js/console "rendering..."))))))
 
-(def view (View. (lib/JS> :el "#main-enclosure"
-                          :model model)))
+(def STATE (let [model (Model.)
+                 view (View. (lib/JS> :el "#main-enclosure"
+                                      :model model))]
+             (lib/JS> :model model
+                      :view view)))
+
+(defn go [] nil)
+
+(jq/document-ready go)

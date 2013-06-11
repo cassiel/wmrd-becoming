@@ -32,8 +32,8 @@
        [:.droppable {;;:height "50px"
                      :background "#000"
                      :color "#FFF"}]
-       [:.drop-active {:color "#44F"}]
-       [:.drop-hover {:background "#44A"}]))
+       [:.drop-active {:background "#22A"}]
+       [:.drop-hover {:background "#88A"}]))
 
 (def other
   (css [:.foo {:height "50px"}]))
