@@ -25,6 +25,10 @@
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/dragger.js"
                 :optimizations :simple}}
+    {:source-paths ["src-cljs/lib" "src-cljs/sortable"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/sortable.js"
+                :optimizations :simple}}
     {:source-paths ["src-cljs/lib" "src-cljs/search_template"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/search_template.js"

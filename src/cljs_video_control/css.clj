@@ -35,5 +35,11 @@
        [:.drop-active {:background "#22A"}]
        [:.drop-hover {:background "#88A"}]))
 
+(def sortable
+  (css [:.item {:height "60px"
+                :border "2px solid #AAA"
+                :background "#CCC"
+                :text-align "center"}]))
+
 (def other
   (css [:.foo {:height "50px"}]))

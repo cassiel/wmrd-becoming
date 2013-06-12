@@ -47,7 +47,10 @@
             "a simple search and templating test"]]
 
       [:li [:a {:href "dragger"}
-            "a simple drag-and-drop example"]]]]]))
+            "a simple drag-and-drop example"]]
+
+      [:li [:a {:href "sortable"}
+            "sortable items by dragging"]]]]]))
 
 (defn render-demo-backbone []
   (hp/html5
@@ -202,6 +205,21 @@
 
     (hp/include-js "js/dragger.js")]))
 
+(defn render-sortable
+  "backbone/jQuery sortable example."
+  []
+  (hp/html5
+   (standard-head "Sortable" css/sortable)
+
+   [:body
+    [:div.container
+     [:h2 "Sortable"]
+
+     [:div#main-enclosure
+      (apply lx/format-row 12 (for [i (range 6)] [1 [:div.item (inc i)]]))]]
+
+    (hp/include-js "js/sortable.js")]))
+
 (defroutes my-routes
   (GET "/" [] (render-index))
   (GET "/demo-backbone" [] (render-demo-backbone))
@@ -210,6 +228,7 @@
   (GET "/range-slider" [] (render-range-slider))
   (GET "/search-template" [] (search-template))
   (GET "/dragger" [] (render-dragger))
+  (GET "/sortable" [] (render-sortable))
   (route/resources "/" {:root "public"}))
 
 (def app
