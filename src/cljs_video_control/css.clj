@@ -38,7 +38,10 @@
 (def sortable
   (css [:.outer-box {:float "left"}]
        [:.storage {:float "left"}]
-       [".outer-box, .storage" {:border "1px solid #000"}]
+       [".outer-box, .storage" {:background "#EEE"
+                                :width "100%"
+                                :height "148px"
+                                }]
        [:.inner-box {:background "#CCC"}]
        [:.lower-box {:background "#BBB"}]
        [".inner-box, .lower-box" {:float "left"

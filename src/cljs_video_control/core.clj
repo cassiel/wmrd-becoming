@@ -212,13 +212,16 @@
    (standard-head "Sortable" css/sortable)
 
    [:body
+    [:script#item-template {:type "text/template"}
+     [:div.inner-box "<%= title %>"]]
+
     [:div.container
      [:h2 "Sortable"]
 
      [:div#main-enclosure
       (lx/format-row 12
                      [6 [:div.outer-box.connected-sortable
-                         (for [i (range 3)] [:div.inner-box (inc i)])]])
+                         #_ (for [i (range 3)] [:div.inner-box (inc i)])]])
 
       [:div {:style "height: 20px"}]
 

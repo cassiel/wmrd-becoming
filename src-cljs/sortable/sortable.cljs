@@ -10,7 +10,7 @@
   (.extend
    Backbone.Model
    (lib/JS> :initialize (fn [] (.log js/console "SortableModel initialised."))
-            :defaults { })))
+            :defaults {:title "---" })))
 
 ;; A collection for the sortables.
 
@@ -20,10 +20,27 @@
    (lib/JS> :model SortableModel
             :initialize (fn [] (.log js/console "SortableConnection initialised.")))))
 
-(def TopLevelView
+(def ItemView
   (.extend
    Backbone.View
-   ))
+   (lib/JS>
+    :initialize
+    (fn [] (.log js/console "ItemView initialised."))
+
+    ;; Pull template from page, cache as fn:
+    :template
+    (.template js/_
+               (.html ($ "#item-template")))
+
+    ;; Render by replacing our HTML with a template rendered with the model properties
+    ;; (specifically "title"). Return ourself.
+    :render
+    (fn []
+      (this-as me
+               (.html
+                (.-$el me)
+                (.template me (.toJSON (.-model me))))
+               me)))))
 
 (def TopLevelView
   (.extend
@@ -39,8 +56,15 @@
                            (.listenTo me
                                       (.-collection me)
                                       "change"
-                                      (.-render me))
+                                      (fn [] (.log js/console "collection change")))
 
+                           (.listenTo me
+                                      (.-collection me)
+                                      "add"
+                                      (fn [item]
+                                        (let [view (ItemView. (lib/JS> :model item))
+                                              el (.-el (.render view))]
+                                          (.append ($ ".outer-box") el))))
                            ;; Initial render:
                            (.render me)))
 
@@ -48,7 +72,8 @@
 
             :render
             (fn [] (this-as me
-                           (.log js/console "rendering..."))))))
+                           (.log js/console (str "rendering at length..."
+                                                 (.-length (.-collection me)))))))))
 
 (def STATE (let [collection (SortableCollection.)
                  view (TopLevelView. (lib/JS> :el "#main-enclosure"
@@ -56,6 +81,8 @@
              (lib/JS> :collection collection
                       :top-view view)))
 
-(defn go [] nil)
+(defn go []
+  (.add (.-collection STATE)
+        (lib/JS> :title "Robot")))
 
 (jq/document-ready go)
