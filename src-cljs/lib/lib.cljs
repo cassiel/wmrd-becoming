@@ -12,3 +12,6 @@
    %1 is model, %2 is view."
   [f]
   (fn [& e] (this-as view (apply f (.-model view) view e))))
+
+(defn logger [heading obj]
+  (.log js/console (str "[| " heading " :: " (.keys js/_ obj) " |]")))

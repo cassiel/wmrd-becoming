@@ -216,7 +216,15 @@
      [:h2 "Sortable"]
 
      [:div#main-enclosure
-      (apply lx/format-row 12 (for [i (range 6)] [1 [:div.item (inc i)]]))]]
+      (lx/format-row 12
+                     [6 [:div.outer-box.connected-sortable
+                         (for [i (range 3)] [:div.inner-box (inc i)])]])
+
+      [:div {:style "height: 20px"}]
+
+      (lx/format-row 12
+                     [8 [:div.storage.connected-sortable
+                         (for [i (range 12)] [:div.lower-box (+ 101 i)])]])]]
 
     (hp/include-js "js/sortable.js")]))
 

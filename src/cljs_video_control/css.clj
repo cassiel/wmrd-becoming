@@ -36,10 +36,17 @@
        [:.drop-hover {:background "#88A"}]))
 
 (def sortable
-  (css [:.item {:height "60px"
-                :border "2px solid #AAA"
-                :background "#CCC"
-                :text-align "center"}]))
+  (css [:.outer-box {:float "left"}]
+       [:.storage {:float "left"}]
+       [".outer-box, .storage" {:border "1px solid #000"}]
+       [:.inner-box {:background "#CCC"}]
+       [:.lower-box {:background "#BBB"}]
+       [".inner-box, .lower-box" {:float "left"
+                                  :height "60px"
+                                  :width "60px"
+                                  :margin "5px"
+                                  :border "2px solid #AAA"
+                                  :text-align "center"}]))
 
 (def other
   (css [:.foo {:height "50px"}]))

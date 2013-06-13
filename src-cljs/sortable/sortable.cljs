@@ -4,42 +4,57 @@
   (:require [jayq.core :as jq]
             [lib :as lib]))
 
-(def Model
+;; A model for each item in the list of sortables.
+
+(def SortableModel
   (.extend
    Backbone.Model
-   (lib/JS> :initialize (fn [])
+   (lib/JS> :initialize (fn [] (.log js/console "SortableModel initialised."))
+            :defaults { })))
 
-            :defaults {:my-value 42})))
+;; A collection for the sortables.
 
-(def View
+(def SortableCollection
+  (.extend
+   Backbone.Collection
+   (lib/JS> :model SortableModel
+            :initialize (fn [] (.log js/console "SortableConnection initialised.")))))
+
+(def TopLevelView
+  (.extend
+   Backbone.View
+   ))
+
+(def TopLevelView
   (.extend
    Backbone.View
    (lib/JS> :initialize
             (fn [] (this-as me
-                           (.sortable (.$ me ".row"))
+                           (.sortable (.$ me ".outer-box, .storage")
+                                      (lib/JS> :items ".inner-box, .lower-box"
+                                               :connectWith ".connected-sortable"
+                                               :containment "#main-enclosure"))
 
-                           ;; Listen to the model:
+                           ;; Listen to the collection:
                            (.listenTo me
-                                      (.-model me)
+                                      (.-collection me)
                                       "change"
                                       (.-render me))
 
                            ;; Initial render:
                            (.render me)))
 
-        :events { }
+            :events { }
 
-        :render
-        (fn [] (this-as me
-                       (.log js/console "rendering..."))))))
+            :render
+            (fn [] (this-as me
+                           (.log js/console "rendering..."))))))
 
-
-
-(def STATE (let [model (Model.)
-                 view (View. (lib/JS> :el "#main-enclosure"
-                                      :model model))]
-             (lib/JS> :model model
-                      :view view)))
+(def STATE (let [collection (SortableCollection.)
+                 view (TopLevelView. (lib/JS> :el "#main-enclosure"
+                                              :collection collection))]
+             (lib/JS> :collection collection
+                      :top-view view)))
 
 (defn go [] nil)
 
