@@ -52,12 +52,13 @@
                                                :connectWith ".connected-sortable"
                                                :containment "#main-enclosure"))
 
-                           ;; Listen to the collection:
+                           ;; "change" event from the collection:
                            (.listenTo me
                                       (.-collection me)
                                       "change"
                                       (fn [] (.log js/console "collection change")))
 
+                           ;; "add" event from the collection:
                            (.listenTo me
                                       (.-collection me)
                                       "add"
@@ -68,7 +69,18 @@
                            ;; Initial render:
                            (.render me)))
 
-            :events { }
+            :events {"sortupdate .outer-box"
+                     (fn [e ui]
+                       (lib/logger "update: e" e)
+                       (lib/logger "update: ui" ui)
+                       (.log js/console "item id" (.-id (first (.-item ui))))
+                       (this-as me
+                                (doseq [x (.sortable (.$ me ".outer-box")
+                                                     "toArray")]
+                                  (.log js/console (str "item.id " x)))))
+
+                     "sortupdate .storage"
+                     (fn [e ui] nil)}
 
             :render
             (fn [] (this-as me
