@@ -213,21 +213,28 @@
 
    [:body
     [:script#item-template {:type "text/template"}
-     [:div.inner-box "<%= title %>"]]
+     [:div.inner-box [:button.add-me "<%= title %>"]]]
 
     [:div.container
      [:h2 "Sortable"]
 
      [:div#main-enclosure
       (lx/format-row 12
-                     [6 [:div.outer-box.connected-sortable]])
+                     [6 [:div.outer-box]])
 
       [:div {:style "height: 20px"}]
 
-      (lx/format-row 12
-                     [8 [:div.storage.connected-sortable
-                         (for [i (range 101 120)]
-                           [(str "div#x" i ".lower-box") i])]])]]
+      [:div#store
+       (lx/format-row 12
+                      [8 [:div.storage]]
+                      #_ [8 [:div.storage
+                             (for [i (range 101 110)]
+                               [(str "div#x" i ".lower-box") [:button.add-me i]])]])
+
+       [:div {:style "height: 20px"}]
+
+       (lx/format-row 12
+                      [2 [:div#adder [:button.test-add "Test Add"]]])]]]
 
     (hp/include-js "js/sortable.js")]))
 
