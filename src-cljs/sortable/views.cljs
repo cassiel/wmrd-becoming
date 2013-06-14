@@ -17,7 +17,10 @@
                (.html ($ "#item-template")))
 
     :events {"click .add-me"
-             :addClick}
+             :addClick
+
+             "click .del-me"
+             :delClick}
 
     :addClick
     (fn []
@@ -26,15 +29,28 @@
                (.add (.-sortableColl (.-options me))
                      (.clone (.-model me)))))
 
+    :delClick
+    (fn []
+      (this-as me
+               (.log js/console (str "item del on " (.keys js/_ me)))
+               (let [m (.-model me)]
+                 (.remove (.-sortableColl (.-options me)) m)
+                 ;; HTTP destroy on `m`.
+                 )))
 
-    ;; Render by replacing our HTML with a template rendered with the model properties
-    ;; (specifically "title"). Return ourself.
+    ;; Render by replacing our HTML (initially an anonymous `div`) with a template
+    ;; rendered with the model properties (specifically "title" and "colour").
+    ;; (We replace the HTML of our `div`, so the template `div` is nested.)
+    ;; Return ourself.
     :render
     (fn []
       (this-as me
-               (.html
-                (.-$el me)
-                (.template me (.toJSON (.-model me))))
+               (.html (.-$el me)
+                      (.template me (.toJSON (.-model me))))
+               (.css (.$ me ".inner-box")
+                     "background-color"
+                     (let [[r g b] (.get (.-model me) "colour")]
+                       (format "rgb(%d, %d, %d)" r g b)))
                me)))))
 
 (def BotLevelView
@@ -61,17 +77,18 @@
 
                            (.render me)))
 
-            :events {"click .test-add"
-                     :testAdd}
+            :events {"click .populate"
+                     :populate}
 
 
-            :testAdd
+            :populate
             (fn [e]
               (.preventDefault e)
-              (this-as me (.add (.-collection me)
-                                (lib/JS> :title "Added (Bot)"))))
-
-
+              (doseq [i (range 10)]
+                (let [rgb (repeatedly 3 #(rand-int 256))]
+                  (this-as me (.add (.-collection me)
+                                    (lib/JS> :title (str (inc i))
+                                             :colour rgb))))))
 
             :render
             (fn [] (this-as me
@@ -111,6 +128,11 @@
 
                              (.listenTo me
                                         coll
+                                        "remove"
+                                        (fn [] (js/alert "REMOVE")))
+
+                             (.listenTo me
+                                        coll
                                         "reset"
                                         (.log js/console "collection reset!")))
 
@@ -145,12 +167,6 @@
 
             :updateStorage
             (fn [e ui] nil)
-
-            :testAdd
-            (fn [e]
-              (.preventDefault e)
-              (this-as me (.add (.-collection me)
-                                (lib/JS> :title "Added (Top)"))))
 
             :render
             (fn [] (this-as me
