@@ -237,7 +237,8 @@
        [:div {:style "height: 20px"}]
 
        (lx/format-row 12
-                      [2 [:div#adder [:button.populate "Populate"]]])]]]
+                      [2 [:button#populate.main-button "Populate"]]
+                      [2 [:button#fetcher.main-button "Fetch"]])]]]
 
     (hp/include-js "js/sortable.js")]))
 
@@ -247,9 +248,19 @@
      :B [2 3]}
     :C :D 55 6 []]})
 
+(defn fake-initial-store []
+  {:body [{:title (str "F" (rand-int 100)) :colour "#000000"}
+          {:title (str "F" (rand-int 100)) :colour "#000000"}]})
+
+(defn simple-logging-middleware [app]
+  (fn [req]
+    (doseq [[k v] req]
+      (println k " -> " v))
+    (app req)))
+
 (defroutes my-routes
+  ;; HTML pages
   (GET "/" [] (render-index))
-  (GET "/json-test" [] (json-test))
   (GET "/demo-backbone" [] (render-demo-backbone))
   (GET "/video-backbone" [] (render-video-backbone))
   (GET "/video-framing" [] (render-video-framing))
@@ -257,7 +268,18 @@
   (GET "/search-template" [] (search-template))
   (GET "/dragger" [] (render-dragger))
   (GET "/sortable" [] (render-sortable))
-  (route/resources "/" {:root "public"}))
+
+  ;; JSON testing:
+  (GET "/json-test" [] (json-test))
+
+  ;; Model interaction:
+  (GET "/store" [] (fake-initial-store))
+
+  ;; Misc:
+  (route/resources "/" {:root "public"})
+  (route/not-found "page not found"))
 
 (def app
-  (json/wrap-json-response (handler/site my-routes)))
+  (-> (handler/site my-routes)
+      (json/wrap-json-response)
+      (simple-logging-middleware)))

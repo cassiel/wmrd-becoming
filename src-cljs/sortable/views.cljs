@@ -56,6 +56,17 @@
                        (format "rgb(%d, %d, %d)" r g b)))
                me)))))
 
+(defn add-item
+  "Add an item to the view, synthesising a DOM element for it."
+  [me model]
+  (let [coll (.-collection me)
+        sortable-coll (.-sortableCollection (.-options me))
+        view (ItemView. (lib/JS> :model model
+                                 :sortableColl
+                                 sortable-coll))
+        el (.-el (.render view))]
+    (.append (.$ me ".storage") el)))
+
 (def BotLevelView
   (.extend
    Backbone.View
@@ -70,18 +81,22 @@
                              (.listenTo me
                                         coll
                                         "add"
-                                        (fn [item]
-                                          (.log js/console "add triggered in BotLevelView.")
-                                          (let [view (ItemView. (lib/JS> :model item
-                                                                         :sortableColl
-                                                                         sortable-coll))
-                                                el (.-el (.render view))]
-                                            (.append (.$ me ".storage") el)))))
+                                        (partial add-item me))
+
+                             (.listenTo me
+                                        coll
+                                        "reset"
+                                        (fn [items]
+                                          (.remove (.$ me ".box"))
+                                          (doseq [i (.-models items)] (add-item me i)))))
 
                            (.render me)))
 
-            :events {"click .populate"
-                     :populate}
+            :events {"click #populate"
+                     :populate
+
+                     "click #fetcher"
+                     :doFetch}
 
             :populate
             (fn [e]
@@ -91,6 +106,21 @@
                   (this-as me (.add (.-collection me)
                                     (lib/JS> :title (str (inc i))
                                              :colour rgb))))))
+
+            :doFetch
+            (fn []
+              (this-as me
+                       ;; When fetching, reset the entire collection, since we'll
+                       ;; generally be replacing everything.
+                       (.fetch (.-collection me)
+                               (lib/JS> :reset true
+
+                                        :success
+                                        (fn [] (.log js/console "fetched"))
+
+                                        :error
+                                        (fn [coll resp opts]
+                                          (js/alert resp))))))
 
             :render
             ;; No actual rendering code (for now): we just listen to model changes and

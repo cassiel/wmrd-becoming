@@ -58,7 +58,8 @@
                :margin "5px"}]
        [:.inner-box {:height "100%"
                      :border "2px solid #AAA"
-                     :text-align "center"}]))
+                     :text-align "center"}]
+       [:.main-button {:width "100%"}]))
 
 (def other
   (css [:.foo {:height "50px"}]))
