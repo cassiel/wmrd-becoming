@@ -3,8 +3,10 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [hiccup.page :as hp]
-            [ring.middleware.json :as json])
-  (:require (cljs-video-control [css :as css]
+            (ring.middleware [json :as json]
+                             [params :as params]))
+  (:require (cljs-video-control [ajax :as ajax]
+                                [css :as css]
                                 [layout :as lx])))
 
 (defn standard-head [title & css-stems]
@@ -248,14 +250,10 @@
      :B [2 3]}
     :C :D 55 6 []]})
 
-(defn fake-initial-store []
-  {:body [{:title (str "F" (rand-int 100)) :colour "#000000"}
-          {:title (str "F" (rand-int 100)) :colour "#000000"}]})
-
 (defn simple-logging-middleware [app]
   (fn [req]
     (doseq [[k v] req]
-      (println k " -> " v))
+      (println (format "%20s: %s" k v)))
     (app req)))
 
 (defroutes my-routes
@@ -273,7 +271,8 @@
   (GET "/json-test" [] (json-test))
 
   ;; Model interaction:
-  (GET "/store" [] (fake-initial-store))
+  (GET "/store" [] (ajax/get-store))
+  (POST "/active" {p :params} (ajax/post-active p))
 
   ;; Misc:
   (route/resources "/" {:root "public"})
@@ -281,5 +280,6 @@
 
 (def app
   (-> (handler/site my-routes)
+      (json/wrap-json-params)
       (json/wrap-json-response)
       (simple-logging-middleware)))

@@ -9,7 +9,7 @@
    Backbone.View
    (lib/JS>
     :initialize
-    (fn [] (.log js/console "ItemView initialised."))
+    (fn [] (.log js/console "ItemView initialised"))
 
     ;; Pull template from page, cache as fn:
     :template
@@ -23,17 +23,20 @@
              :delClick}
 
     :addClick
+    ;; add this item (from the store) to the active sequence.
     (fn []
       (this-as me
                (.log js/console (str "item add on " (.keys js/_ me)))
-               (.add (.-sortableColl (.-options me))
-                     (.clone (.-model me)))))
+               (lib/logger "create"
+                           (.create (.-sortableColl (.-options me))
+                                    (.clone (.-model me))))))
 
     :delClick
+    ;; delete this item (from the sequence).
     (fn []
       (this-as me
-               (.log js/console (str "item del on " (.keys js/_ me)))
                (let [m (.-model me)]
+                 (lib/logger "remove attempt" m)
                  (.remove (.-sortableColl (.-options me)) m)
                  ;; HTTP destroy on `m`.
                  )))
@@ -62,8 +65,7 @@
   (let [coll (.-collection me)
         sortable-coll (.-sortableCollection (.-options me))
         view (ItemView. (lib/JS> :model model
-                                 :sortableColl
-                                 sortable-coll))
+                                 :sortableColl sortable-coll))
         el (.-el (.render view))]
     (.append (.$ me ".storage") el)))
 
@@ -74,15 +76,17 @@
 
             :initialize
             (fn [] (this-as me
-                           (let [coll (.-collection me)
-                                 sortable-coll (.-sortableCollection (.-options me))]
-                             ;; "add" event from the collection. Create a new view
-                             ;; over a copy of the added model.
+                           (let [coll (.-collection me)]
+                             ;; `add` event from the collection. Create a new view
+                             ;; over a copy of the added model. (Not sure we actually
+                             ;; see `add` for the bottom-level collections.)
                              (.listenTo me
                                         coll
                                         "add"
                                         (partial add-item me))
 
+                             ;; `reset` for replacing the entire selection from the
+                             ;; server. (There's no point doing that incrementally.)
                              (.listenTo me
                                         coll
                                         "reset"
@@ -101,11 +105,13 @@
             :populate
             (fn [e]
               (.preventDefault e)
-              (doseq [i (range 10)]
-                (let [rgb (repeatedly 3 #(rand-int 256))]
-                  (this-as me (.add (.-collection me)
-                                    (lib/JS> :title (str (inc i))
-                                             :colour rgb))))))
+              (this-as me
+                       (.reset (.-collection me))
+                       (doseq [i (range 10)]
+                         (let [rgb (repeatedly 3 #(rand-int 256))]
+                           (.add (.-collection me)
+                                 (lib/JS> :title (str (inc i))
+                                          :colour rgb))))))
 
             :doFetch
             (fn []
@@ -169,7 +175,19 @@
                              (.listenTo me
                                         coll
                                         "reset"
-                                        (.log js/console "collection reset!")))
+                                        (.log js/console "collection reset!"))
+
+                             (.listenTo me
+                                        coll
+                                        "error"
+                                        (fn [model xhr options]
+                                          (lib/logger "collection event ERROR" xhr)
+                                          (.log js/console (.-statusText xhr))))
+
+                             (.listenTo me
+                                        coll
+                                        "sync"
+                                        (fn [] (js/alert "collection event SYNC"))))
 
                            ;; Initial render:
                            (.render me)))
