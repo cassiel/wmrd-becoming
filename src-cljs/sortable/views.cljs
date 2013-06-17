@@ -47,6 +47,9 @@
       (this-as me
                (.html (.-$el me)
                       (.template me (.toJSON (.-model me))))
+               ;; CSS class needed for sortable interaction etc - added to our
+               ;; root `div`.
+               (.addClass (.-$el me) "box")
                (.css (.$ me ".inner-box")
                      "background-color"
                      (let [[r g b] (.get (.-model me) "colour")]
@@ -80,7 +83,6 @@
             :events {"click .populate"
                      :populate}
 
-
             :populate
             (fn [e]
               (.preventDefault e)
@@ -91,6 +93,8 @@
                                              :colour rgb))))))
 
             :render
+            ;; No actual rendering code (for now): we just listen to model changes and
+            ;; alter the DOM directly there.
             (fn [] (this-as me
                            (.log js/console (str "rendering BotLevel at length..."
                                                  (.-length (.-collection me))))
@@ -105,8 +109,9 @@
             (fn [] (this-as me
                            (let [coll (.-collection me)]
                              (.sortable (.$ me ".outer-box")
-                                        (lib/JS> :items ".inner-box"
-                                                 :containment "#main-enclosure"))
+                                        (lib/JS> :items ".box"
+                                                 :containment "#main-enclosure"
+                                                 :tolerance "pointer"))
 
                              ;; "change" event from the collection:
                              (.listenTo me

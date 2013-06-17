@@ -47,19 +47,18 @@
        ;; "Remove" buttons for items in the active box:
        [".outer-box .inner-box .add-me" {:display "none"}]
        [".storage .inner-box .del-me" {:display "none"}]
-       [:.inner-box {:background-color "#CCC"}]
-       [:.lower-box {:background-color "#BBB"}]
        [:div.tt {:text-align "center"
                  :margin-left "auto"
                  :margin-right "auto"
                  :font-size "16px"
                  :color "#FFFFFF"}]
-       [".inner-box, .lower-box" {:float "left"
-                                  :height "60px"
-                                  :width "60px"
-                                  :margin "5px"
-                                  :border "2px solid #AAA"
-                                  :text-align "center"}]))
+       [:.box {:float "left"
+               :height "60px"
+               :width "60px"
+               :margin "5px"}]
+       [:.inner-box {:height "100%"
+                     :border "2px solid #AAA"
+                     :text-align "center"}]))
 
 (def other
   (css [:.foo {:height "50px"}]))
