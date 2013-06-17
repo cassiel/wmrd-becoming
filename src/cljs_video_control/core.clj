@@ -2,7 +2,8 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-            [hiccup.page :as hp])
+            [hiccup.page :as hp]
+            [ring.middleware.json :as json])
   (:require (cljs-video-control [css :as css]
                                 [layout :as lx])))
 
@@ -240,8 +241,15 @@
 
     (hp/include-js "js/sortable.js")]))
 
+(defn json-test []
+  {:body
+   [{:A 1
+     :B [2 3]}
+    :C :D 55 6 []]})
+
 (defroutes my-routes
   (GET "/" [] (render-index))
+  (GET "/json-test" [] (json-test))
   (GET "/demo-backbone" [] (render-demo-backbone))
   (GET "/video-backbone" [] (render-video-backbone))
   (GET "/video-framing" [] (render-video-framing))
@@ -252,4 +260,4 @@
   (route/resources "/" {:root "public"}))
 
 (def app
-  (handler/site my-routes))
+  (json/wrap-json-response (handler/site my-routes)))

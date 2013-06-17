@@ -5,7 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.5"]
-                 [jayq "2.3.0"]]
+                 [jayq "2.3.0"]
+                 [ring/ring-json "0.2.0"]]
   :plugins [[lein-cljsbuild "0.3.2"]
             [lein-ring "0.8.5"]]
 
