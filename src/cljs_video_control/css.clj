@@ -40,10 +40,8 @@
        [:.storage {:float "left"}]
        [".outer-box, .storage" {:background-color "#EEE"
                                 :width "100%"
-                                :height "148px"}]
+                                :height "200px"}]
        ["button.add-me, button.del-me" {:padding 0}]
-       [:div.bb {:height "100%"
-                 :vertical-align "bottom"}]
        ;; "Remove" buttons for items in the active box:
        [".outer-box .inner-box .add-me" {:display "none"}]
        [".storage .inner-box .del-me" {:display "none"}]
@@ -53,8 +51,7 @@
                  :font-size "16px"
                  :color "#FFFFFF"}]
        [:.box {:float "left"
-               :height "60px"
-               :width "60px"
+               :width "120px"
                :margin "5px"}]
        [:.inner-box {:height "100%"
                      :border "2px solid #AAA"

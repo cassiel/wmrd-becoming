@@ -57,6 +57,9 @@
                      "background-color"
                      (let [[r g b] (.get (.-model me) "colour")]
                        (format "rgb(%d, %d, %d)" r g b)))
+               (.attr (.$ me ".thumb")
+                      "src"
+                      (format "/thumbs/%s.JPG" (.get (.-model me) "image")))
                me)))))
 
 (defn add-item
