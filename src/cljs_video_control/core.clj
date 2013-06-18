@@ -1,7 +1,7 @@
 (ns cljs-video-control.core
   (:use compojure.core)
-  (:require [compojure.route :as route]
-            [compojure.handler :as handler]
+  (:require (compojure [route :as route]
+                       [handler :as handler])
             [ring.util [response :as resp]]
             (ring.middleware [json :as json])
             (cljs-video-control [ajax :as ajax]
