@@ -2,15 +2,16 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
+            [ring.util [response :as resp]]
             (ring.middleware [json :as json])
             (cljs-video-control [ajax :as ajax]
                                 [pages :as pages])))
 
 (defn json-test []
-  {:body
+  (resp/response
    [{:A 1
      :B [2 3]}
-    :C :D 55 6 []]})
+    :C :D 55 6 []]))
 
 (defn simple-logging-middleware [app]
   (fn [req]
