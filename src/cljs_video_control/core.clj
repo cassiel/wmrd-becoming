@@ -30,7 +30,7 @@
   (GET "/search-template" [] (dp/search-template))
   (GET "/dragger" [] (dp/render-dragger))
   (GET "/sortable" [] (dp/render-sortable))
-  (GET "/composite" [] (pages/render-composite))
+  (GET "/main" [] (pages/render-main))
 
   ;; JSON testing:
   (GET "/json-test" [] (json-test))

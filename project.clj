@@ -49,6 +49,10 @@
     {:source-paths ["src-cljs/lib" "src-cljs/video_framing"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/video_framing.js"
+                :optimizations :simple}}
+    {:source-paths ["src-cljs/lib" "src-cljs/main"]
+     :compiler {:pretty-print true
+                :output-to "_dyn-resources/public/js/main.js"
                 :optimizations :simple}}]}
 
   :ring {:port 3000

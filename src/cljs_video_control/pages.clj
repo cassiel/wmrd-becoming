@@ -33,10 +33,10 @@
       [:li [:a {:href "sortable"}
             "sortable items by dragging"]]
 
-      [:li [:a {:href "composite"}
-            "composite interface"]]]]]))
+      [:li [:a {:href "main"}
+            "main"]]]]]))
 
-(defn render-composite []
+(defn render-main []
   (hp/html5
    (lx/standard-head "Video Control")
 
@@ -91,4 +91,4 @@
                         [:thead [:tr [:th "Location"] [:th "Status"]]]
                         [:tbody [:tr [:td#location "---"] [:td#status "---"]]]]])]
 
-    (hp/include-js "js/video_backbone.js")]))
+    (hp/include-js "js/main.js")]))
