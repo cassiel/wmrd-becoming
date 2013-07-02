@@ -5,7 +5,8 @@
             [ring.util [response :as resp]]
             (ring.middleware [json :as json])
             (cljs-video-control [ajax :as ajax]
-                                [pages :as pages])))
+                                [pages :as pages]
+                                [demo-pages :as dp])))
 
 (defn json-test []
   (resp/response
@@ -22,13 +23,14 @@
 (defroutes my-routes
   ;; HTML pages
   (GET "/" [] (pages/render-index))
-  (GET "/demo-backbone" [] (pages/render-demo-backbone))
-  (GET "/video-backbone" [] (pages/render-video-backbone))
-  (GET "/video-framing" [] (pages/render-video-framing))
-  (GET "/range-slider" [] (pages/render-range-slider))
-  (GET "/search-template" [] (pages/search-template))
-  (GET "/dragger" [] (pages/render-dragger))
-  (GET "/sortable" [] (pages/render-sortable))
+  (GET "/demo-backbone" [] (dp/render-demo-backbone))
+  (GET "/video-backbone" [] (dp/render-video-backbone))
+  (GET "/video-framing" [] (dp/render-video-framing))
+  (GET "/range-slider" [] (dp/render-range-slider))
+  (GET "/search-template" [] (dp/search-template))
+  (GET "/dragger" [] (dp/render-dragger))
+  (GET "/sortable" [] (dp/render-sortable))
+  (GET "/composite" [] (pages/render-composite))
 
   ;; JSON testing:
   (GET "/json-test" [] (json-test))

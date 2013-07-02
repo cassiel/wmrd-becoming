@@ -3,29 +3,13 @@
             (cljs-video-control [css :as css]
                                 [layout :as lx])))
 
-(defn- standard-head [title & css-stems]
-  (as-> [:head
-         [:title title]
-         [:meta {:name "viewport"
-                 :content "width=device-width, initial-scale=1.0"}]
-         (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
-                         "css/bootstrap.min.css")]
-        H
-
-        (cons H (cons css/standard css-stems))
-
-        (conj H (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
-                               "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
-                               "http://underscorejs.org/underscore.js"
-                               "http://backbonejs.org/backbone.js"))))
-
 (defn render-index []
   (hp/html5
-   (standard-head "Index" css/other)
+   (lx/standard-head "Index" css/other)
 
    [:body
     [:div.container
-     [:h2 "Demo Pages"]
+     [:h2 "Pages"]
 
      [:ul
       [:li [:a {:href "demo-backbone"}
@@ -47,42 +31,14 @@
             "a simple drag-and-drop example"]]
 
       [:li [:a {:href "sortable"}
-            "sortable items by dragging"]]]]]))
+            "sortable items by dragging"]]
 
-(defn render-demo-backbone []
+      [:li [:a {:href "composite"}
+            "composite interface"]]]]]))
+
+(defn render-composite []
   (hp/html5
-   (standard-head "Backbone Demo")
-
-   [:body
-    [:div.container
-     [:h2 "backbone.js"]
-
-     [:p [:button#clickable-event "Click to trigger an alert from basic Backbone event"]]
-     [:p [:button#clickable-color "Click to change background color"]]]
-
-    (hp/include-js "js/demo_backbone.js")]))
-
-(defn search-template []
-  (hp/html5
-   (standard-head "Search Template")
-
-   [:body
-    ;; Template for underscore.js:
-    [:script#search_template {:type "text/template"}
-     [:div.row
-      [:div.span1.offset3 [:label "<%= search_label %>"]]
-      [:div.span4 [:input#search_input {:type "text"}]]
-      [:div.span1 [:input#search_button {:type "button" :value "Search"}]]]]
-
-    [:div.container
-     [:h2 "Search Example"]
-     [:div#search_container]]
-
-    (hp/include-js "js/search_template.js")]))
-
-(defn render-video-backbone []
-  (hp/html5
-   (standard-head "Video Control")
+   (lx/standard-head "Video Control")
 
    [:body
     [:div.container
@@ -136,110 +92,3 @@
                         [:tbody [:tr [:td#location "---"] [:td#status "---"]]]]])]
 
     (hp/include-js "js/video_backbone.js")]))
-
-(defn render-video-framing []
-  (hp/html5
-   (standard-head "Video Framing")
-
-   [:body
-    [:div.container
-     [:h2 "Draggable Frame"]
-     [:video#video
-      {:controls 1
-       :preload "none"
-       :poster "http://media.w3.org/2010/05/sintel/poster.png"}
-      [:source#mp4
-       {:src "http://media.w3.org/2010/05/sintel/trailer.mp4"
-        :type "video/mp4"}]]
-
-     [:div#draggable]]
-
-    (hp/include-js "js/video_framing.js")]))
-
-(defn render-range-slider []
-  (hp/html5
-   (standard-head "Range Slider")
-
-   [:body
-    [:div.container
-     [:h2 "Range Slider"]
-
-     [:div#range_slider]
-
-     [:div {:style "height: 20px"}]
-
-     [:div.row
-      [:div.span2.offset5 [:table.table.table-bordered.table-condensed
-                           [:thead [:tr [:th "Min"] [:th "Max"]]]
-                           [:tbody [:tr [:td#min "min"] [:td#max "max"]]]]]]]
-
-    (hp/include-js "js/range_slider.js")]))
-
-(defn render-dragger
-  "backbone/jQuery drag-and-drop example."
-  []
-  (hp/html5
-   (standard-head "Drag and Drop" css/dragger)
-
-   [:body
-    [:div.container
-     [:h2 "Drag and Drop"]
-
-     [:div#main-enclosure
-      [:div.row
-       [:div.span10.offset1
-        [:table.table.table-bordered.table-condensed
-         ;; Make the TDs selectively droppable in the JS.
-         [:tbody [:tr (for [i (range 10)] [:td.droppable-skel i])]]]]]
-
-      [:div.row
-       (for [i (range 6)] [(if (zero? i)
-                             :div.span1.offset3
-                             :div.span1)
-                           ;; Make the entire tables draggable:
-                           [:table.table.table-bordered.table-condensed.draggable
-                            [:tbody [:tr [:td "X"]]]]])]]]
-
-    (hp/include-js "js/dragger.js")]))
-
-(defn render-sortable
-  "backbone/jQuery sortable example."
-  []
-  (hp/html5
-   (standard-head "Sortable" css/sortable)
-
-   [:body
-    [:script#item-template-OLD {:type "text/template"}
-     [:div.inner-box
-      [:div.tt "<%= title %>"]
-      [:div.bb
-       [:button.add-me [:i.icon-plus-sign]]
-       [:button.del-me [:i.icon-trash]]]]]
-
-    [:script#item-template {:type "text/template"}
-     [:div.inner-box
-      [:img.thumb]            ; Can't use template on attributes?
-      [:div.tt "<%= title %>"
-       [:button.add-me [:i.icon-plus-sign]]
-       [:button.del-me [:i.icon-trash]]]]]
-
-    [:div.container
-     [:h2 "Sortable"]
-
-     [:div#main-enclosure
-      (lx/format-row 12
-                     [6 [:div.outer-box]])
-
-      [:div {:style "height: 20px"}]
-
-      [:div#store
-       (lx/format-row 12
-                      [12 [:div.storage]])
-
-       [:div {:style "height: 20px"}]
-
-       (lx/format-row 12
-                      [2 [:button#populate.main-button "Populate"]]
-                      [2 [:button#fetcher.main-button "Fetch"]])]]]
-
-    (hp/include-js "js/sortable.js")]))

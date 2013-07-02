@@ -1,4 +1,22 @@
-(ns cljs-video-control.layout)
+(ns cljs-video-control.layout
+  (:require [hiccup.page :as hp]
+            (cljs-video-control [css :as css])))
+
+(defn standard-head [title & css-stems]
+  (as-> [:head
+         [:title title]
+         [:meta {:name "viewport"
+                 :content "width=device-width, initial-scale=1.0"}]
+         (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
+                         "css/bootstrap.min.css")]
+        H
+
+        (cons H (cons css/standard css-stems))
+
+        (conj H (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
+                               "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
+                               "http://underscorejs.org/underscore.js"
+                               "http://backbonejs.org/backbone.js"))))
 
 (defn format-row
   "Format a set of divs centred into a row. The args are each [span, data].
