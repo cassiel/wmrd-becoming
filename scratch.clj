@@ -1,5 +1,5 @@
 (ns user
-  (:require (cljs-video-control [core :as core])))
+  (:import (java.io File)))
 
 (defn foo [& args] (apply hash-map args))
 
@@ -26,3 +26,12 @@
            [2 "B"]
            [2 "C"]
            [2 "D"])
+
+
+(map (comp next
+           (partial re-find #"(\d+)_(\d+)_(\d+)*")
+           str)
+     (seq (.listFiles (File. "/home/nick/Desktop/shots-some"))))
+
+(next
+ (re-find #"(\d+)_(\d+)_(\d+)*" "shot_00000_00005531_00005695"))

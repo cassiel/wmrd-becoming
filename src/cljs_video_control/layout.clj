@@ -1,6 +1,18 @@
 (ns cljs-video-control.layout
   (:require [hiccup.page :as hp]
-            (cljs-video-control [css :as css])))
+            (cljs-video-control [manifest :as m]
+                                [css :as css])))
+
+(defn url
+  "Build a URL, using a `src` from `manifest`."
+  [src path]
+  (format "http://%s%s/%s"
+          (:host src)
+          (if-let [p (:port src)] (str ":" p) "")
+          path))
+
+(def server (partial url m/SERVER))
+(def asset (partial url m/ASSETS))
 
 (defn standard-head [title & css-stems]
   (as-> [:head

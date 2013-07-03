@@ -1,6 +1,7 @@
 (ns cljs-video-control.pages
   (:require [hiccup.page :as hp]
-            (cljs-video-control [css :as css]
+            (cljs-video-control [manifest :as m]
+                                [css :as css]
                                 [layout :as lx])))
 
 (defn render-index []
@@ -44,10 +45,7 @@
     ;; Template for each of the clip thumbnail containers:
     [:script#item-template {:type "text/template"}
      [:div.inner-box
-      [:img.thumb]            ; Can't use template on attributes?
-      [:div.tt "<%= title %>"
-       [:button.add-me [:i.icon-plus-sign]]
-       [:button.del-me [:i.icon-trash]]]]]
+      [:img.thumb]]]
 
     [:div.container
      [:h2 "Video Control"]
@@ -58,29 +56,19 @@
         [:video#video
          {:controls 1
           :preload "none"
-          :poster "http://media.w3.org/2010/05/sintel/poster.png"}
+          :poster (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/image_half.jpg"))}
          [:source#mp4
-          {:src "http://media.w3.org/2010/05/sintel/trailer.mp4"
+          {:src (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/imageList_all.mp4"))
            :type "video/mp4"}]]]]]
-
-     #_ [:div#buttons
-      [:button {:onclick "document._video.load()"} "load()"]
-      [:button {:onclick "document._video.play()"} "play()"]
-      [:button {:onclick "document._video.pause()"} "pause()"]
-      [:button {:onclick "document._video.currentTime+=10"} "currentTime+=10"]
-      [:button {:onclick "document._video.currentTime-=10"} "currentTime-=10"]
-      [:button {:onclick "document._video.currentTime=50"} "currentTime=50"]
-      [:button {:onclick "document._video.playbackRate++"} "playbackRate++"]
-      [:button {:onclick "document._video.playbackRate--"} "playbackRate--"]
-      [:button {:onclick "document._video.playbackRate+=0.1"} "playbackRate+=0.1"]
-      [:button {:onclick "document._video.playbackRate-=0.1"} "playbackRate-=0.1"]]
 
      [:div {:style "height: 20px"}]
 
      [:div#clips
       (lx/format-row 12
                      [4 [:button#fetcher.v "FETCH"]])
-      [:div#storage]]
+
+      (lx/format-row 12
+                     [12 [:div#storage]])]
 
      [:div {:style "height: 10px"}]
 

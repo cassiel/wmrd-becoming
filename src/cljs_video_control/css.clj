@@ -1,5 +1,6 @@
 (ns cljs-video-control.css
-  (:require [hiccup.core :as c]))
+  (:require [hiccup.core :as c]
+            (cljs-video-control [manifest :as m])))
 
 (defn- css-rule [rule]
   (let [sels (reverse (rest (reverse rule)))
@@ -12,21 +13,23 @@
   (c/html [:style {:type "text/css"}
            (apply str (map css-rule rules))]))
 
+(defn- video-aspect [props width]
+  (assoc props
+    :width (str width "px")
+    :height (str (int (/ width m/ASPECT)) "px")))
+
 (def standard
-  (css [:#video {:width "400px"
-                 :height "225px"}]
-       [:.vdiv {:width "400px"
-                :margin-left "auto"
-                :margin-right "auto"}]
+  (css [:.vdiv (video-aspect {:margin-left "auto"
+                              :margin-right "auto"} 480)]
+       [:#video (video-aspect { } 480)]
        [:.v {:width "100%"}]
        [:#draggable {:background "#FFF"
                      :opacity 0.25}]
        [:input#search_input {:width "100%"}]))
 
 (def main
-  (css [:.box {:float "left"
-               :width "240px"
-               :margin "5px"}]))
+  (css [:.box (video-aspect {:float "left"
+                             :margin "5px"} 220)]))
 
 (def dragger
   (css [:.draggable {;; :height "50px"

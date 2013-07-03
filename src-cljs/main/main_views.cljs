@@ -76,10 +76,6 @@
                ;; CSS class needed for sortable interaction etc - added to our
                ;; root `div`.
                (.addClass (.-$el me) "box")
-               (.css (.$ me ".inner-box")
-                     "background-color"
-                     (let [[r g b] (.get (.-model me) "colour")]
-                       (format "rgb(%d, %d, %d)" r g b)))
                (.attr (.$ me ".thumb")
                       "src"
                       (.get (.-model me) "thumb"))
