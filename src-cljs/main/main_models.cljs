@@ -2,28 +2,21 @@
   (:use [jayq.core :only [$]])
   (:require [lib :as lib]))
 
-(def VIDEOS {:sintel ["http://media.w3.org/2010/05/sintel/poster.png"
-                      "http://media.w3.org/2010/05/sintel/trailer.mp4"]
-             :bunny ["http://media.w3.org/2010/05/bunny/poster.png"
-                     "http://media.w3.org/2010/05/bunny/trailer.mp4"]
-             :movie ["http://media.w3.org/2010/05/bunny/poster.png"
-                     "http://192.168.2.3:3000/peach.mp4"]
-             :video ["http://media.w3.org/2010/05/video/poster.png"
-                     "http://media.w3.org/2010/05/video/movie_300.mp4"]})
-
 (defn- switch-video
-  [model mp4src tag]
-  (let [v (.get model "video")
-        [poster-name video-name] (VIDEOS (keyword tag))]
-    (.setAttribute v "poster" poster-name)
-    (.setAttribute mp4src "src" video-name)
+  [model thumb video]
+  (let [v (.get model "video")]
+    (.setAttribute v "poster" thumb)
+    (.setAttribute (.get model "mp4src") "src" video)
       ;; Turn off the sound for the test movies:
     (set! (.-muted v) true)))
 
 (def Clip
   (.extend
    Backbone.Model
-   (lib/JS> :initialize (fn [] (.log js/console "Clip model initialized."))
+   (lib/JS> :initialize
+            (fn [] (this-as me
+                           (.log js/console "Clip model initialized.")))
+
             :defaults {:title "BOGUS"
                        :image "XXBOGUS"
                        :colour [0 0 0]})))
@@ -36,10 +29,9 @@
     (fn [] nil)
 
     :select
-    (fn [tag]
-      (.log js/console (str "select " tag))
+    (fn [thumb video]
       (this-as me
-               (switch-video me (.get me "mp4src") tag)
+               (switch-video me thumb video)
                (.load me)))
 
     :load

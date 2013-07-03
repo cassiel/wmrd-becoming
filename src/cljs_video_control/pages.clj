@@ -54,8 +54,7 @@
       [:div.span12
        [:div.vdiv
         [:video#video
-         {:controls 1
-          :preload "none"
+         {:preload "none"
           :poster (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/image_half.jpg"))}
          [:source#mp4
           {:src (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/imageList_all.mp4"))

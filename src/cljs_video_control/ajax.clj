@@ -27,11 +27,11 @@
                :thumb thumb
                :video video}))]
 
-    (resp/response (sort-by :slug (map (comp make-item
-                                             next
-                                             (partial re-find #"(\d+)_(\d+)_(\d+)*")
-                                             str)
-                                       (take 1000 (seq (.listFiles (File. m/SHOTS-FILE-ROOT)))))))))
+    (resp/response (take 1000 (sort-by :slug (map (comp make-item
+                                                      next
+                                                      (partial re-find #"(\d+)_(\d+)_(\d+)*")
+                                                      str)
+                                                (seq (.listFiles (File. m/SHOTS-FILE-ROOT)))))))))
 
 (defn post-active
   "Post an item for the active sequence."

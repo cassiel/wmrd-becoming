@@ -16,7 +16,8 @@
              :model model
              :collection clips
              :main-view main-view
-             :clip-set-view (v/ClipSetView. (lib/JS> :collection clips)))))
+             :clip-set-view (v/ClipSetView. (lib/JS> :collection clips
+                                                     :model model)))))
 
 (defn listen [model v]
   (.addEventListener v

@@ -25,14 +25,6 @@
     ;; Events generally go into the model.
     :events
     {"click #play" (lib/on-model-and-view #(.play %1))
-
-     "click #select"
-     (lib/on-model-and-view
-      (fn [m v ev]
-        (let [text (.-innerText (.-currentTarget ev))
-              tag (keyword text)]
-          (.select m tag))))
-
      "click #load" (lib/on-model-and-view #(.load %1))
      "click #pause" (lib/on-model-and-view #(.pause %1))
      "click #jump10" (lib/on-model-and-view #(.jump %1 10))}
@@ -50,19 +42,30 @@
    Backbone.View
    (lib/JS>
     :initialize
-    (fn [] (.log js/console "ClipView initialised"))
+    (fn []
+      (this-as me
+               (.log js/console (str "ClipView initialised, opts=" (.keys js/_ (.-options me))))))
 
     ;; Pull template from page, cache as fn:
     :template
     (.template js/_
                (.html ($ "#item-template")))
 
-    :events {"click .add-me"
-             :addClick}
+    :events {"click .inner-box"
+             :doLoad}
 
-    :addClick
+    :doLoad
     ;; add this item (from the store) to the active sequence.
-    (fn [] (.log js/console "addClick"))
+    (fn []
+      (this-as me
+               (.log js/console (str "LOAD!: "
+                                     (.get (.-model me) "slug")
+                                     ", video model "
+                                     (.-videoModel (.-options me))))
+
+               (.select (.-videoModel (.-options me))
+                        (.get (.-model me) "thumb")
+                        (.get (.-model me) "video"))))
 
     ;; Render by replacing our HTML (initially an anonymous `div`) with a template
     ;; rendered with the model properties (specifically "title" and "colour").
@@ -88,9 +91,9 @@
 
 (defn add-item
   "Add an item to the view, synthesising a DOM element for it."
-  [me model]
-  (let [coll (.-collection me)
-        clip-view (ClipView. (lib/JS> :model model))
+  [me model video-model]
+  (let [clip-view (ClipView. (lib/JS> :model model
+                                      :videoModel video-model))
         el (.-el (.render clip-view))]
     (.append (.$ me "#storage") el)))
 
@@ -102,7 +105,8 @@
 
             :initialize
             (fn [] (this-as me
-                           (let [coll (.-collection me)]
+                           (let [coll (.-collection me)
+                                 video-model (.-model me)]
                              (.listenTo me
                                         coll
                                         "change"
@@ -112,10 +116,13 @@
                              (.listenTo me
                                         coll
                                         "reset"
-                                        (fn [items] (.log js/console (str  "collection reset, len="
-                                                                          (.-length coll)))
+                                        (fn [items]
+                                          (.log js/console (str  "collection reset, len="
+                                                                 (.-length coll)
+                                                                 " i am "
+                                                                 (.keys js/_ video-model)))
                                           (.remove (.$ me ".box"))    ; Remove multiple?
-                                          (doseq [i (.-models items)] (add-item me i))))
+                                          (doseq [i (.-models items)] (add-item me i video-model))))
 
                              (.listenTo me
                                         coll
