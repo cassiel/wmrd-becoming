@@ -23,6 +23,11 @@
                      :opacity 0.25}]
        [:input#search_input {:width "100%"}]))
 
+(def main
+  (css [:.box {:float "left"
+               :width "240px"
+               :margin "5px"}]))
+
 (def dragger
   (css [:.draggable {;; :height "50px"
                      :background "#CCC"}]

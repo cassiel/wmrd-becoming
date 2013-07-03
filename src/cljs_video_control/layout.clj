@@ -14,6 +14,7 @@
         (cons H (cons css/standard css-stems))
 
         (conj H (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
+                               "js/jquery.lazyload.min.js"
                                "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
                                "http://underscorejs.org/underscore.js"
                                "http://backbonejs.org/backbone.js"))))

@@ -7,11 +7,11 @@
    Backbone.Collection
    (lib/JS> :model m/SortableModel
             :url "/active"
-            :initialize (fn [] (.log js/console "SortableConnection initialised.")))))
+            :initialize (fn [] (.log js/console "SortableCollection initialised.")))))
 
 (def StoreCollection
   (.extend
    Backbone.Collection
    (lib/JS> :model m/StoreModel
             :url "/store"
-            :initialize (fn [] (.log js/console "StoreConnection initialised.")))))
+            :initialize (fn [] (.log js/console "StoreCollection initialised.")))))

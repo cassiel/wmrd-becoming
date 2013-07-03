@@ -38,9 +38,17 @@
 
 (defn render-main []
   (hp/html5
-   (lx/standard-head "Video Control")
+   (lx/standard-head "Video Control" css/main)
 
    [:body
+    ;; Template for each of the clip thumbnail containers:
+    [:script#item-template {:type "text/template"}
+     [:div.inner-box
+      [:img.thumb]            ; Can't use template on attributes?
+      [:div.tt "<%= title %>"
+       [:button.add-me [:i.icon-plus-sign]]
+       [:button.del-me [:i.icon-trash]]]]]
+
     [:div.container
      [:h2 "Video Control"]
 
@@ -68,6 +76,13 @@
       [:button {:onclick "document._video.playbackRate-=0.1"} "playbackRate-=0.1"]]
 
      [:div {:style "height: 20px"}]
+
+     [:div#clips
+      (lx/format-row 12
+                     [4 [:button#fetcher.v "FETCH"]])
+      [:div#storage]]
+
+     [:div {:style "height: 10px"}]
 
      (lx/format-row 12
                     ;; slight hack: the button text is an index to the videos in the JS.
