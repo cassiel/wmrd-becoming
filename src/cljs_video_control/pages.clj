@@ -52,9 +52,11 @@
 
      [:div.row
       [:div.span12
-       [:div.vdiv
+       [:div#vdiv
         [:video#video
          {:preload "none"
+          :autoplay 1
+          :loop 1
           :poster (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/image_half.jpg"))}
          [:source#mp4
           {:src (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/imageList_all.mp4"))
@@ -67,16 +69,7 @@
                      [4 [:button#fetcher.v "FETCH"]])
 
       (lx/format-row 12
-                     [12 [:div#storage]])]
-
-     [:div {:style "height: 10px"}]
-
-     (lx/format-row 12
-                    ;; slight hack: the button text is an index to the videos in the JS.
-                    [2 [:button#select.v "sintel"]]
-                    [2 [:button#select.v "bunny"]]
-                    [2 [:button#select.v "movie"]]
-                    [2 [:button#select.v "video"]])
+                     [12 [:div#viewport [:div#storage]]])]
 
      [:div {:style "height: 10px"}]
 

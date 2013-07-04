@@ -1,9 +1,9 @@
 (ns cljs-video-control.manifest)
 
-(def SERVER {:host "192.168.1.109"
+(def SERVER {:host "192.168.1.106"
              :port 3000})
 
-(def ASSETS {:host "192.168.1.109"})
+(def ASSETS {:host "192.168.1.106"})
 
 (def SHOTS-FILE-ROOT "/home/nick/public_html/shots")
 

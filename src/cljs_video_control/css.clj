@@ -19,9 +19,9 @@
     :height (str (int (/ width m/ASPECT)) "px")))
 
 (def standard
-  (css [:.vdiv (video-aspect {:margin-left "auto"
-                              :margin-right "auto"} 480)]
-       [:#video (video-aspect { } 480)]
+  (css [:#vdiv (video-aspect {:margin-left "auto"
+                              :margin-right "auto"} 720)]
+       [:#video (video-aspect { } 720)]
        [:.v {:width "100%"}]
        [:#draggable {:background "#FFF"
                      :opacity 0.25}]
@@ -29,7 +29,13 @@
 
 (def main
   (css [:.box (video-aspect {:float "left"
-                             :margin "5px"} 220)]))
+                             :margin "5px"} 220)]
+       [:#viewport {:height "100px"
+                    :width "100%"
+                    :overflow "scroll"
+                    :-webkit-overflow-scrolling "touch"}]
+       [:#storage {:height "0px"
+                   :width "100000px"}]))
 
 (def dragger
   (css [:.draggable {;; :height "50px"
