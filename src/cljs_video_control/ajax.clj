@@ -1,6 +1,7 @@
 (ns cljs-video-control.ajax
   "Methods for AJAX interaction."
   (:require [ring.util [response :as resp]]
+            [clj-http.client :as client]
             (cljs-video-control [manifest :as m]
                                 [layout :as lx]))
   (:import (java.io File)))
@@ -38,5 +39,6 @@
 
 (defn upload
   [p]
-  (println "PARAMS: " p)
-  (resp/response "OK"))
+  (let [s (lx/field "upload")]
+    (println "SERVER " s " PARAMS " p)
+    (client/post s {:form-params p})))

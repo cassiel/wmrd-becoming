@@ -5,6 +5,9 @@
 
 (def ASSETS {:host "192.168.1.111"})
 
+(def FIELD {:host "192.168.2.9"
+            :port 8080})
+
 (def SHOTS-FILE-ROOT "/home/nick/public_html/shots")
 
 (def SHOTS-URL-ROOT "~nick/shots")

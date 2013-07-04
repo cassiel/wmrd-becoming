@@ -13,6 +13,7 @@
 
 (def server (partial url m/SERVER))
 (def asset (partial url m/ASSETS))
+(def field (partial url m/FIELD))
 
 (defn assets [shot frame-lo frame-hi]
   (let [dir-name (format "%s/shot_%s_%s_%s" m/SHOTS-URL-ROOT shot frame-lo frame-hi)]
