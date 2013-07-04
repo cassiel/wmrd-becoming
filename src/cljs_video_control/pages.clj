@@ -71,10 +71,15 @@
       #_ (lx/format-row 12
                      [4 [:button#fetcher.v "FETCH"]])
 
+     [:div {:style "height: 10px"}]
+
       (lx/format-row 12
                      [12 [:div#viewport [:div#storage]]])]
 
      [:div {:style "height: 10px"}]
+
+     (lx/format-row 12
+                    [4 [:button#upload.v "UPLOAD"]])
 
      #_ (lx/format-row 12
                     [2 [:button#play.v "PLAY"]]

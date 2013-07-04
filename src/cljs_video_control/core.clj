@@ -38,6 +38,7 @@
   ;; Model interaction:
   (GET "/store" [] (ajax/get-store))
   (GET "/clips" [] (ajax/get-clips))
+  (POST "/upload" {p :params} (ajax/upload p))
   (POST "/active" {p :params} (ajax/post-active p))
 
   ;; Misc:

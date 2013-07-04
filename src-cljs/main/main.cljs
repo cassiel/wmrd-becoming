@@ -11,7 +11,8 @@
         model (m/VideoSystem. (lib/JS> :video v))
         clips (c/ClipCollection.)
         main-view (v/VideoView. (lib/JS> :el ".container"
-                                         :model model))]
+                                         :model model
+                                         :syncModel (m/Selection.)))]
     (lib/JS> :video v
              :model model
              :collection clips

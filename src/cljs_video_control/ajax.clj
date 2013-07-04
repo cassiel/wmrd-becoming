@@ -35,3 +35,8 @@
   (println "PARAMS: " p)
   (resp/response {:id 999
                   :title "SAVED"}))
+
+(defn upload
+  [p]
+  (println "PARAMS: " p)
+  (resp/response "OK"))

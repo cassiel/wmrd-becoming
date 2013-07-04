@@ -17,7 +17,10 @@
             "auto" ["cljsbuild" "auto"]}
 
   :cljsbuild
-  {:builds
+  {:crossovers [cljs-video-control.manifest]
+   :crossover-path "_crossover-cljs"
+
+   :builds
    [{:source-paths ["src-cljs/lib" "src-cljs/demo_backbone"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/demo_backbone.js"

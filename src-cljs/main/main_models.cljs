@@ -1,17 +1,19 @@
 (ns main-models
   (:use [jayq.core :only [$]])
-  (:require [lib :as lib]))
+  (:require [lib :as lib]
+            [cljs-video-control.manifest :as m]))
 
 (defn- switch-video
-  [model thumb video]
+  [model slug thumb video]
   (let [v (.get model "video")]
     (.setAttribute v "poster" thumb)
     (.setAttribute (.get model "mp4src") "src" video)
     ;; Turn off the sound for the test movies:
     (set! (.-muted v) true)
     ;; Reset editing state associated with the current video:
-    (.set me (lib/JS> :keyStartPosition 0.0
-                      :keyEndPosition 1.0))))
+    (.set model (lib/JS> :slug slug
+                         :keyStartPosition 0.0
+                         :keyEndPosition 1.0))))
 
 (def Clip
   (.extend
@@ -32,9 +34,9 @@
     (fn [] nil)
 
     :select
-    (fn [thumb video]
+    (fn [slug thumb video]
       (this-as me
-               (switch-video me thumb video)
+               (switch-video me slug thumb video)
                (.load me)))
 
     ;; Manual dragging of the selection frame. Drag start/stop.
@@ -95,7 +97,8 @@
       (this-as me (.set me (lib/JS> :status state))))
 
     ;; defaults can also be a function.
-    :defaults {:status false
+    :defaults {:slug (first m/SPLASH-ASSET)
+               :status false
                :location 0.0
                :duration 0.0
                :keyStartPosition 0.0
@@ -105,3 +108,23 @@
                :trapSecondHalf false    ; Trapped when frame drag begins, reset on release.
                :dragging false
                :dragPosition 0})))
+
+;; Model purely for sending video selection details to Field, via AJAX:
+
+(def Selection
+  (.extend
+   Backbone.Model
+   (lib/JS>
+    :url "/upload"
+
+    :upload
+    (fn [main-model] (this-as me (.save me
+                                       (lib/JS> :slug (.get main-model "slug")
+                                                :keyStartPosition (.get main-model "keyStartPosition")
+                                                :keyEndPosition (.get main-model "keyEndPosition"))
+                                       (lib/JS> :success (fn [] (.log js/console "Upload OK"))
+                                                :error (fn [_ resp opts] (js/alert resp))))))
+
+    :defaults {:slug (first m/SPLASH-ASSET)
+               :keyStartPosition 0.0
+               :keyEndPosition 1.0})))

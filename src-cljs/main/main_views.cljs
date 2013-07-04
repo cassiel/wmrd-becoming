@@ -6,8 +6,9 @@
   "Position the selection frame at `pos` (normalised, 0.0..1.0) in the video frame."
   [view pos]
   (let [m (.-model view)
-        mapped-pos (+ (* pos (.get m "keyEndPosition"))
-                      (* (- 1 pos) (.get m "keyStartPosition")))
+        mg (lib/getter m)
+        mapped-pos (+ (* pos (mg :keyEndPosition))
+                      (* (- 1 pos) (mg :keyStartPosition)))
         v (.$ view "#video")
         d (.$ view "#draggable")
         video-width (.width v)
@@ -56,7 +57,8 @@
                      (.width d (Math/floor (* (.height d) (/ 9 16))))
                      (position-frame me 0))
 
-                   (let [m (.-model me)]
+                   (let [m (.-model me)
+                         mg (lib/getter m)]
                      ;; Re-render on any change to playback location (or duration, on load):
                      (.listenTo me
                                 m
@@ -73,7 +75,7 @@
                                 "change:normLocation"
                                 #_ (fn []
                                   (.log js/console (str ">> normalised location "
-                                                        (.get m "normLocation"))))
+                                                        (mg :normLocation))))
                                 (.-render me))
 
                      (.listenTo me
@@ -89,15 +91,15 @@
                      (.listenTo me
                                 m
                                 "change:dragging"
-                                (fn [] (.log js/console (str "Dragging: " (.get m "dragging")))))
+                                (fn [] (.log js/console (str "Dragging: " (mg :dragging)))))
 
                      (.listenTo me
                                 m
                                 "change:status"
                                 (fn []
-                                  (.log js/console (str "need restart? s=" (.get m "status")))
+                                  (.log js/console (str "need restart? s=" (mg :status)))
                                   ;; This hack for HTML5 mobile (instead of looping) - seems to be a lost cause.
-                                  #_ (when-not (.get m "status")
+                                  #_ (when-not (mg :status)
                                     (doseq [x [0 0.01]] (.jump m x))
                                     (.play m)
                                     #_ (js/setTimeout #(.load m) 2000))
@@ -111,32 +113,36 @@
     {"click #play" (lib/on-model-and-view #(.play %1))
      "click #load" (lib/on-model-and-view #(.load %1))
      "click #pause" (lib/on-model-and-view #(.pause %1))
-     "click #jump10" (lib/on-model-and-view #(.jump %1 10))}
+     "click #jump10" (lib/on-model-and-view #(.jump %1 10))
+
+     "click #upload" (fn [] (this-as me (.upload (.-syncModel (.-options me))
+                                                (.-model me))))}
 
     :render
     (lib/on-model-and-view (fn [m v]
-                             (do
-                               (.html (.-$duration v) (.get m "duration"))
-                               (.html (.-$location v) (.get m "location"))
-                               (.html (.-$dragging v) (format "LIVE=%s TRAP=%s POS=%f KS=%f KE=%f"
-                                                              (.get m "liveSecondHalf")
-                                                              (.get m "trapSecondHalf")
-                                                              (.get m "dragPosition")
-                                                              (.get m "keyStartPosition")
-                                                              (.get m "keyEndPosition")))
+                             (let [mg (lib/getter m)]
+                               (do
+                                 (.html (.-$duration v) (mg :duration))
+                                 (.html (.-$location v) (mg :location))
+                                 (.html (.-$dragging v) (format "LIVE=%s TRAP=%s POS=%f KS=%f KE=%f"
+                                                                (mg :liveSecondHalf)
+                                                                (mg :trapSecondHalf)
+                                                                (mg :dragPosition)
+                                                                (mg :keyStartPosition)
+                                                                (mg :keyEndPosition)))
 
-                               (when-not (.get m "dragging")
-                                 (position-frame v (.get m "normLocation"))
+                                 (when-not (mg :dragging)
+                                   (position-frame v (mg :normLocation))
 
-                                 (.css (.$ v "#draggable h2") "display" "none")
+                                   (.css (.$ v "#draggable h2") "display" "none")
 
-                                 (if (.get m "liveSecondHalf")
-                                   (.css (.$ v "#draggable h2.secondHalf") "display" "block")
-                                   (.css (.$ v "#draggable h2.firstHalf") "display" "block")))
+                                   (if (mg :liveSecondHalf)
+                                     (.css (.$ v "#draggable h2.secondHalf") "display" "block")
+                                     (.css (.$ v "#draggable h2.firstHalf") "display" "block")))
 
-                               (.html (.-$status v)
-                                      (if (.get m "status")
-                                        "playing" "paused"))))))))
+                                 (.html (.-$status v)
+                                        (if (mg :status)
+                                          "playing" "paused")))))))))
 
 (def ClipView
   (.extend
@@ -159,14 +165,16 @@
     ;; add this item (from the store) to the active sequence.
     (fn []
       (this-as me
-               (.log js/console (str "LOAD!: "
-                                     (.get (.-model me) "slug")
-                                     ", video model "
-                                     (.-videoModel (.-options me))))
+               (let [mg (lib/getter (.-model me))]
+                 (.log js/console (str "LOAD!: "
+                                       (mg :slug)
+                                       ", video model "
+                                       (.-videoModel (.-options me))))
 
-               (.select (.-videoModel (.-options me))
-                        (.get (.-model me) "thumb")
-                        (.get (.-model me) "video"))))
+                 (.select (.-videoModel (.-options me))
+                          (mg :slug)
+                          (mg :thumb)
+                          (mg :video)))))
 
     ;; Render by replacing our HTML (initially an anonymous `div`) with a template
     ;; rendered with the model properties (specifically "title" and "colour").
