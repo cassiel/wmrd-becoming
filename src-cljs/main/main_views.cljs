@@ -2,6 +2,15 @@
   (:use [jayq.core :only [$]])
   (:require [lib :as lib]))
 
+(defn position-frame
+  "Position the selection frame at `pos` (normalised, 0.0..1.0) in the video frame."
+  [view pos]
+  (let [v (.$ view "#video")
+        d (.$ view "#draggable")]
+    (.position d (lib/JS> :my "left top"
+                          :at (format "left+%d top" pos)
+                          :of v))))
+
 (def VideoView
   (.extend
    Backbone.View
@@ -9,16 +18,49 @@
     :initialize
     (fn [] (this-as me
                    ;; Hold onto some text fields:
+                   (set! (.-$duration me) (.$ me "#duration"))
                    (set! (.-$location me) (.$ me "#location"))
                    (set! (.-$status me) (.$ me "#status"))
+
                    ;; Plant the jQuery for the MP4 (within our main el) into the model.
                    ;; (This is rather nasty: should probably do it via global "$".)
                    (.set (.-model me) (lib/JS> "mp4src" (first (.$ me "#mp4"))))
-                   ;; Re-render on any model change:
+
+                   ;; Set up draggable cover frame:
+                   (let [v (.$ me "#video")
+                         d (.$ me "#draggable")]
+                     (.draggable d (lib/JS> :containment v))
+                     (.height d (.height v))
+                     (.width d (Math/floor (* (.height d) (/ 9 16))))
+                     (position-frame me 0)
+                     #_ (.position d (lib/JS> :my "left top"
+                                           :at "left top"
+                                           :of (.$ me "#video"))))
+
+                   ;; Re-render on any change to playback location (or duration, on load):
                    (.listenTo me
                               (.-model me)
-                              "change"
+                              "change:duration"
                               (.-render me))
+
+                   (.listenTo me
+                              (.-model me)
+                              "change:location"
+                              (.-render me))
+
+                   (let [m (.-model me)]
+                     (.listenTo me
+                                m
+                                "change:status"
+                                (fn []
+                                  (.log js/console (str "need restart? s=" (.get (.-model me) "status")))
+                                  ;; This hack for HTML5 mobile (instead of looping) - seems to be a lost cause.
+                                  #_ (when-not (.get m "status")
+                                    (doseq [x [0 0.01]] (.jump m x))
+                                    (.play m)
+                                    #_ (js/setTimeout #(.load m) 2000))
+                                  (.render me))))
+
                    ;; Initial render:
                    (.render me)))
 
@@ -32,7 +74,9 @@
     :render
     (lib/on-model-and-view (fn [m v]
                              (do
+                               (.html (.-$duration v) (.get m "duration"))
                                (.html (.-$location v) (.get m "location"))
+                               (position-frame v (* 50 (.get m "location")))
                                (.html (.-$status v)
                                       (if (.get m "status")
                                         "playing" "paused"))))))))
@@ -133,7 +177,7 @@
                              (.listenTo me
                                         coll
                                         "sync"
-                                        (fn [] (js/alert "collection event SYNC")))
+                                        (fn [] (.log js/console "collection event SYNC")))
 
                              (.render me))))
 

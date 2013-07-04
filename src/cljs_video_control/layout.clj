@@ -14,6 +14,11 @@
 (def server (partial url m/SERVER))
 (def asset (partial url m/ASSETS))
 
+(defn assets [shot frame-lo frame-hi]
+  (let [dir-name (format "%s/shot_%s_%s_%s" m/SHOTS-URL-ROOT shot frame-lo frame-hi)]
+    {:thumb (asset (format "%s/image_half.jpg" dir-name))
+     :video (asset (format "%s/imageList_all.mp4" dir-name))}))
+
 (defn standard-head [title & css-stems]
   (as-> [:head
          [:title title]

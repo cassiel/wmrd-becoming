@@ -53,19 +53,20 @@
      [:div.row
       [:div.span12
        [:div#vdiv
-        [:video#video
-         {:preload "none"
-          :autoplay 1
-          :loop 1
-          :poster (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/image_half.jpg"))}
-         [:source#mp4
-          {:src (lx/asset (str m/SHOTS-URL-ROOT "/shot_00002_00005871_00005943/imageList_all.mp4"))
-           :type "video/mp4"}]]]]]
+        (let [{:keys [thumb video]} (apply lx/assets m/SPLASH-ASSET)]
+          [:video#video {:preload "none"
+                         :autoplay 1
+                         :loop 1
+                         :poster thumb}
+           [:source#mp4 {:src video
+                         :type "video/mp4"}]])
+
+        [:div#draggable]]]]
 
      [:div {:style "height: 20px"}]
 
      [:div#clips
-      (lx/format-row 12
+      #_ (lx/format-row 12
                      [4 [:button#fetcher.v "FETCH"]])
 
       (lx/format-row 12
@@ -73,7 +74,7 @@
 
      [:div {:style "height: 10px"}]
 
-     (lx/format-row 12
+     #_ (lx/format-row 12
                     [2 [:button#play.v "PLAY"]]
                     [2 [:button#pause.v "PAUSE"]]
                     [2 [:button#jump10.v "JUMP10"]]
@@ -83,7 +84,13 @@
 
      (lx/format-row 12
                     [6 [:table.table.table-bordered.table-condensed
-                        [:thead [:tr [:th "Location"] [:th "Status"]]]
-                        [:tbody [:tr [:td#location "---"] [:td#status "---"]]]]])]
+                        [:thead [:tr
+                                 [:th "Duration"]
+                                 [:th "Location"]
+                                 [:th "Status"]]]
+                        [:tbody [:tr
+                                 [:td#duration "---"]
+                                 [:td#location "---"]
+                                 [:td#status "---"]]]]])]
 
     (hp/include-js "js/main.js")]))

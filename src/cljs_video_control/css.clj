@@ -29,7 +29,7 @@
 
 (def main
   (css [:.box (video-aspect {:float "left"
-                             :margin "5px"} 220)]
+                             :margin "0 5px"} 220)]
        [:#viewport {:height "100px"
                     :width "100%"
                     :overflow "scroll"

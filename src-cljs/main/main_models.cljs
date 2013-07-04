@@ -50,6 +50,11 @@
     (fn [pos] (this-as me
                       (set! (.-currentTime (.get me "video")) pos)))
 
+    :durationUpdate
+    (fn [] (this-as me
+                   (let [t (.-duration (.get me "video"))]
+                     (this-as me (.set me (lib/JS> :duration t))))))
+
     :timeUpdate
     (fn [] (this-as me
                    (let [t (.-currentTime (.get me "video"))]

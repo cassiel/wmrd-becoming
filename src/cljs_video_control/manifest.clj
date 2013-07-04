@@ -10,3 +10,5 @@
 (def SHOTS-URL-ROOT "~nick/shots")
 
 (def ASPECT 24/10)
+
+(def SPLASH-ASSET ["00000" "00005531" "00005695"])

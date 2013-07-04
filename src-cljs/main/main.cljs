@@ -15,11 +15,15 @@
     (lib/JS> :video v
              :model model
              :collection clips
-             :main-view main-view
-             :clip-set-view (v/ClipSetView. (lib/JS> :collection clips
-                                                     :model model)))))
+             :mainView main-view
+             :clipSetView (v/ClipSetView. (lib/JS> :collection clips
+                                                   :model model)))))
 
 (defn listen [model v]
+  (.addEventListener v
+                     "durationchange"
+                     (fn [e] (.durationUpdate model))
+                     false)
   (.addEventListener v
                      "timeupdate"
                      (fn [e] (.timeUpdate model))
@@ -37,6 +41,7 @@
   (let [m (.-model STATE)
         v (.-video STATE)]
     (set! (.-_video js/document) v)       ; temporary, for debugging.
+    (.doFetch (.-clipSetView STATE))
     (listen m v)))
 
 (jq/document-ready go)

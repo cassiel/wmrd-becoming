@@ -20,12 +20,8 @@
   "Get clip list (eventually this'll be scrollable by 'bank')."
   []
   (letfn [(make-item [[shot frame-lo frame-hi]]
-            (let [dir-name (format "%s/shot_%s_%s_%s" m/SHOTS-URL-ROOT shot frame-lo frame-hi)
-                  thumb (lx/asset (format "%s/image_half.jpg" dir-name))
-                  video (lx/asset (format "%s/imageList_all.mp4" dir-name))]
-              {:slug shot
-               :thumb thumb
-               :video video}))]
+            (let [a (lx/assets shot frame-lo frame-hi)]
+              (assoc a :slug shot)))]
 
     (resp/response (take 100 (sort-by :slug (map (comp make-item
                                                        next
