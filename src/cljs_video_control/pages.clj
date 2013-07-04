@@ -61,7 +61,9 @@
            [:source#mp4 {:src video
                          :type "video/mp4"}]])
 
-        [:div#draggable]]]]
+        [:div#draggable
+         [:h2.firstHalf "START"]
+         [:h2.secondHalf "END"]]]]]
 
      [:div {:style "height: 20px"}]
 
@@ -87,10 +89,12 @@
                         [:thead [:tr
                                  [:th "Duration"]
                                  [:th "Location"]
-                                 [:th "Status"]]]
+                                 [:th "Status"]
+                                 [:th "Dragging"]]]
                         [:tbody [:tr
                                  [:td#duration "---"]
                                  [:td#location "---"]
-                                 [:td#status "---"]]]]])]
+                                 [:td#status "---"]
+                                 [:td#dragging "---"]]]]])]
 
     (hp/include-js "js/main.js")]))

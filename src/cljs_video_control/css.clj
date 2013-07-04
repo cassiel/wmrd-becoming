@@ -25,6 +25,8 @@
        [:.v {:width "100%"}]
        [:#draggable {:background "#FFF"
                      :opacity 0.25}]
+       ["#draggable h2.firstHalf, #draggable h2.secondHalf" {:display "none"}]
+       [:#draggable.ui-draggable-dragging {:background "#FAA"}]
        [:input#search_input {:width "100%"}]))
 
 (def main

@@ -5,22 +5,31 @@
 (defn position-frame
   "Position the selection frame at `pos` (normalised, 0.0..1.0) in the video frame."
   [view pos]
-  (let [v (.$ view "#video")
-        d (.$ view "#draggable")]
+  (let [m (.-model view)
+        mapped-pos (+ (* pos (.get m "keyEndPosition"))
+                      (* (- 1 pos) (.get m "keyStartPosition")))
+        v (.$ view "#video")
+        d (.$ view "#draggable")
+        video-width (.width v)
+        frame-width (.width d)
+        tl-pixel-pos (int (* mapped-pos (- video-width frame-width)))]
     (.position d (lib/JS> :my "left top"
-                          :at (format "left+%d top" pos)
+                          :at (format "left+%d top" tl-pixel-pos)
                           :of v))))
 
 (def VideoView
   (.extend
    Backbone.View
    (lib/JS>
+    :el "#vdiv"
+
     :initialize
     (fn [] (this-as me
                    ;; Hold onto some text fields:
                    (set! (.-$duration me) (.$ me "#duration"))
                    (set! (.-$location me) (.$ me "#location"))
-                   (set! (.-$status me) (.$ me "#status"))
+                   (set! (.-$status me)   (.$ me "#status"))
+                   (set! (.-$dragging me) (.$ me "#dragging"))
 
                    ;; Plant the jQuery for the MP4 (within our main el) into the model.
                    ;; (This is rather nasty: should probably do it via global "$".)
@@ -28,32 +37,65 @@
 
                    ;; Set up draggable cover frame:
                    (let [v (.$ me "#video")
-                         d (.$ me "#draggable")]
-                     (.draggable d (lib/JS> :containment v))
+                         d (.$ me "#draggable")
+                         video-width (.width v)]
+                     (.draggable d (lib/JS> :containment v
+                                            :start (fn [ev ui] (.dragging (.-model me) true))
+                                            :stop  (fn [ev ui] (.dragging (.-model me) false))
+
+                                            :drag  (fn [ev ui]
+                                                     ;; frame-width done here because it's not
+                                                     ;; set at initialization time (or rather, it's
+                                                     ;; the default width as per CSS).
+                                                     (let [frame-width (.width (.$ me "#draggable"))
+                                                           pixel-pos (-> ui (.-position) (.-left))]
+                                                       (.dragPosition (.-model me)
+                                                                      (/ pixel-pos
+                                                                         (- video-width frame-width)))))))
                      (.height d (.height v))
                      (.width d (Math/floor (* (.height d) (/ 9 16))))
-                     (position-frame me 0)
-                     #_ (.position d (lib/JS> :my "left top"
-                                           :at "left top"
-                                           :of (.$ me "#video"))))
-
-                   ;; Re-render on any change to playback location (or duration, on load):
-                   (.listenTo me
-                              (.-model me)
-                              "change:duration"
-                              (.-render me))
-
-                   (.listenTo me
-                              (.-model me)
-                              "change:location"
-                              (.-render me))
+                     (position-frame me 0))
 
                    (let [m (.-model me)]
+                     ;; Re-render on any change to playback location (or duration, on load):
+                     (.listenTo me
+                                m
+                                "change:duration"
+                                (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:location"
+                                (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:normLocation"
+                                #_ (fn []
+                                  (.log js/console (str ">> normalised location "
+                                                        (.get m "normLocation"))))
+                                (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:liveSecondHalf"
+                                (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:trapSecondHalf"
+                                (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:dragging"
+                                (fn [] (.log js/console (str "Dragging: " (.get m "dragging")))))
+
                      (.listenTo me
                                 m
                                 "change:status"
                                 (fn []
-                                  (.log js/console (str "need restart? s=" (.get (.-model me) "status")))
+                                  (.log js/console (str "need restart? s=" (.get m "status")))
                                   ;; This hack for HTML5 mobile (instead of looping) - seems to be a lost cause.
                                   #_ (when-not (.get m "status")
                                     (doseq [x [0 0.01]] (.jump m x))
@@ -76,7 +118,22 @@
                              (do
                                (.html (.-$duration v) (.get m "duration"))
                                (.html (.-$location v) (.get m "location"))
-                               (position-frame v (* 50 (.get m "location")))
+                               (.html (.-$dragging v) (format "LIVE=%s TRAP=%s POS=%f KS=%f KE=%f"
+                                                              (.get m "liveSecondHalf")
+                                                              (.get m "trapSecondHalf")
+                                                              (.get m "dragPosition")
+                                                              (.get m "keyStartPosition")
+                                                              (.get m "keyEndPosition")))
+
+                               (when-not (.get m "dragging")
+                                 (position-frame v (.get m "normLocation"))
+
+                                 (.css (.$ v "#draggable h2") "display" "none")
+
+                                 (if (.get m "liveSecondHalf")
+                                   (.css (.$ v "#draggable h2.secondHalf") "display" "block")
+                                   (.css (.$ v "#draggable h2.firstHalf") "display" "block")))
+
                                (.html (.-$status v)
                                       (if (.get m "status")
                                         "playing" "paused"))))))))
