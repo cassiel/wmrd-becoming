@@ -2,6 +2,26 @@
   (:use [jayq.core :only [$]])
   (:require [lib :as lib]))
 
+(defn draw-curtains
+  [view]
+  (let [v (.$ view "#video")
+        d (.$ view "#draggable")
+        video-width (.width v)
+        frame-width (.width d)
+        l-width (- (.-left (.position d))
+                   (.-left (.position v)))
+        r-width (- video-width frame-width l-width)
+        left-curtain (.$ view "#curtainL")
+        right-curtain (.$ view "#curtainR")]
+    (.width left-curtain l-width)
+    (.width right-curtain r-width)
+    (.position left-curtain (lib/JS> :my "right top"
+                                     :at "left top"
+                                     :of d))
+    (.position right-curtain (lib/JS> :my "left top"
+                                      :at "right top"
+                                      :of d))))
+
 (defn position-frame
   "Position the selection frame at `pos` (normalised, 0.0..1.0) in the video frame."
   [view pos]
@@ -16,7 +36,8 @@
         tl-pixel-pos (int (* mapped-pos (- video-width frame-width)))]
     (.position d (lib/JS> :my "left top"
                           :at (format "left+%d top" tl-pixel-pos)
-                          :of v))))
+                          :of v))
+    (draw-curtains view)))
 
 (def VideoView
   (.extend
@@ -51,6 +72,7 @@
                                                      (let [frame-width (.width (.$ me "#draggable"))
                                                            pixel-pos (-> ui (.-position) (.-left))]
                                                        (.dragPosition (.-model me)
+                                                                      pixel-pos
                                                                       (/ pixel-pos
                                                                          (- video-width frame-width)))))))
                      (.height d (.height v))
@@ -69,6 +91,11 @@
                                 m
                                 "change:location"
                                 (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:pixelDragPosition"
+                                (fn [] (draw-curtains me)))
 
                      (.listenTo me
                                 m
@@ -105,6 +132,11 @@
                                     #_ (js/setTimeout #(.load m) 2000))
                                   (.render me))))
 
+                   ;; Set top margin.
+
+                   (.height (.$ me "#top-margin") (int (/ (- (.-height js/screen)
+                                                             (.height (.-$el me))) 2)))
+
                    ;; Initial render:
                    (.render me)))
 
@@ -127,7 +159,7 @@
                                  (.html (.-$dragging v) (format "LIVE=%s TRAP=%s POS=%f KS=%f KE=%f"
                                                                 (mg :liveSecondHalf)
                                                                 (mg :trapSecondHalf)
-                                                                (mg :dragPosition)
+                                                                (mg :normedDragPosition)
                                                                 (mg :keyStartPosition)
                                                                 (mg :keyEndPosition)))
 

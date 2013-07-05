@@ -20,24 +20,33 @@
 
 (def standard
   (css [:#vdiv (video-aspect {:margin-left "auto"
-                              :margin-right "auto"} 720)]
-       [:#video (video-aspect { } 720)]
+                              :margin-right "auto"} m/GALLEY-WIDTH)]
+       [:#video (video-aspect { } m/GALLEY-WIDTH)]
        [:.v {:width "100%"}]
        [:#draggable {:background "#FFF"
-                     :opacity 0.25}]
+                     :opacity 0}]
        ["#draggable h2.firstHalf, #draggable h2.secondHalf" {:display "none"}]
        [:#draggable.ui-draggable-dragging {:background "#FAA"}]
        [:input#search_input {:width "100%"}]))
 
 (def main
-  (css [:.box (video-aspect {:float "left"
-                             :margin "0 5px"} 220)]
+  (css [:body {:background "#111"}]
+       [:.box (video-aspect {:float "left"
+                             :margin "0 5px"} m/THUMB-WIDTH)]
        [:#viewport {:height "100px"
                     :width "100%"
                     :overflow "scroll"
                     :-webkit-overflow-scrolling "touch"}]
+       ["#clips div.row div" {:height (:height (video-aspect { } m/THUMB-WIDTH))
+                              ;;:width "1230px"
+                              }]
        [:#storage {:height "0px"
-                   :width "100000px"}]))
+                   :width "100000px"}]
+       ["#curtainL, #curtainR" (video-aspect {:background "#111"
+                                              :opacity 0.5} m/GALLEY-WIDTH)]
+       [:#curtainL {:border-right "1px solid #888"}]
+       [:#curtainR {:border-left "1px solid #888"}]
+       [:#debug {:display "none"}]))
 
 (def dragger
   (css [:.draggable {;; :height "50px"

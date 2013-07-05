@@ -25,8 +25,10 @@
          [:title title]
          [:meta {:name "viewport"
                  :content "width=device-width, initial-scale=1.0"}]
+
          (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
-                         "css/bootstrap.min.css")]
+                         "css/bootstrap.min.css"
+                         "css/bootstrap-responsive.min.css")]
         H
 
         (cons H (cons css/standard css-stems))

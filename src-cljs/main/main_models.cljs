@@ -46,11 +46,12 @@
                       (when-not how     ; Release drag:
                         (let [key-name (if (.get me "trapSecondHalf") :keyEndPosition :keyStartPosition)]
                           (.set me (lib/JS> :trapSecondHalf (.get me "liveSecondHalf")
-                                            key-name (.get me "dragPosition")))))))
+                                            key-name (.get me "normedDragPosition")))))))
 
     ;; Actual dragging.
     :dragPosition
-    (fn [pos] (this-as me (.set me (lib/JS> :dragPosition pos))))
+    (fn [pixel-pos scaled-pos] (this-as me (.set me (lib/JS> :pixelDragPosition pixel-pos
+                                                            :normedDragPosition scaled-pos))))
 
     :load
     (fn [] (this-as me
@@ -107,7 +108,8 @@
                :liveSecondHalf false    ; Tracks video position.
                :trapSecondHalf false    ; Trapped when frame drag begins, reset on release.
                :dragging false
-               :dragPosition 0})))
+               :normedDragPosition 0.0
+               :pixelDragPosition 0})))
 
 ;; Model purely for sending video selection details to Field, via AJAX:
 

@@ -39,7 +39,7 @@
 
 (defn render-main []
   (hp/html5
-   (lx/standard-head "Video Control" css/main)
+   (lx/standard-head "" css/main)
 
    [:body
     ;; Template for each of the clip thumbnail containers:
@@ -48,7 +48,7 @@
       [:img.thumb]]]
 
     [:div.container
-     [:h2 "Video Control"]
+     [:div#top-margin]
 
      [:div.row
       [:div.span12
@@ -61,18 +61,15 @@
            [:source#mp4 {:src video
                          :type "video/mp4"}]])
 
+        [:div#curtainL]
         [:div#draggable
          [:h2.firstHalf "START"]
-         [:h2.secondHalf "END"]]]]]
+         [:h2.secondHalf "END"]]
+        [:div#curtainR]]]]
 
      [:div {:style "height: 20px"}]
 
      [:div#clips
-      #_ (lx/format-row 12
-                     [4 [:button#fetcher.v "FETCH"]])
-
-     [:div {:style "height: 10px"}]
-
       (lx/format-row 12
                      [12 [:div#viewport [:div#storage]]])]
 
@@ -81,25 +78,20 @@
      (lx/format-row 12
                     [4 [:button#upload.v "UPLOAD"]])
 
-     #_ (lx/format-row 12
-                    [2 [:button#play.v "PLAY"]]
-                    [2 [:button#pause.v "PAUSE"]]
-                    [2 [:button#jump10.v "JUMP10"]]
-                    [2 [:div]])
-
      [:div {:style "height: 10px"}]
 
-     (lx/format-row 12
-                    [6 [:table.table.table-bordered.table-condensed
-                        [:thead [:tr
-                                 [:th "Duration"]
-                                 [:th "Location"]
-                                 [:th "Status"]
-                                 [:th "Dragging"]]]
-                        [:tbody [:tr
-                                 [:td#duration "---"]
-                                 [:td#location "---"]
-                                 [:td#status "---"]
-                                 [:td#dragging "---"]]]]])]
+     [:div#debug
+      (lx/format-row 12
+                     [6 [:table.table.table-bordered.table-condensed
+                         [:thead [:tr
+                                  [:th "Duration"]
+                                  [:th "Location"]
+                                  [:th "Status"]
+                                  [:th "Dragging"]]]
+                         [:tbody [:tr
+                                  [:td#duration "---"]
+                                  [:td#location "---"]
+                                  [:td#status "---"]
+                                  [:td#dragging "---"]]]]])]]
 
     (hp/include-js "js/main.js")]))
