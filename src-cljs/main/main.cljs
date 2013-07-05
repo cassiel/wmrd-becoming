@@ -31,6 +31,10 @@
                      (fn [e] (.timeUpdate model))
                      false)
   (.addEventListener v
+                     "loadstart"
+                     (fn [e] (.loadStart model))
+                     false)
+  (.addEventListener v
                      "play"
                      (fn [e] (.playUpdate model true))
                      false)

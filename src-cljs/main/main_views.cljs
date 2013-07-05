@@ -3,6 +3,13 @@
   (:require [lib :as lib]
             [cljs-video-control.manifest :as m]))
 
+(defn fade-curtains
+  [view level]
+  (let [curtains [(.$ view "#curtainL")
+                  (.$ view "#curtainR")]]
+    (doseq [c curtains]
+      (.fadeTo c "slow" level))))
+
 (defn draw-curtains
   [view]
   (let [v (.$ view "#video")
@@ -75,7 +82,9 @@
                                                        (.dragPosition (.-model me)
                                                                       pixel-pos
                                                                       (/ pixel-pos
-                                                                         (- video-width frame-width)))))))
+                                                                         (- video-width frame-width)))))
+                                            ;; start non-draggable (until we have a video in place):
+                                            :disabled true))
                      (.height d (.height v))
                      (.width d (Math/floor (* (.height d) (/ 9 16))))
                      (position-frame me 0))
@@ -92,6 +101,16 @@
                                 m
                                 "change:location"
                                 (.-render me))
+
+                     (.listenTo me
+                                m
+                                "change:dragEnabled"
+                                (fn [] (let [state (.get (.-model me) "dragEnabled")
+                                            opacity ({false 0.0
+                                                      true 0.5} state)]
+                                        (fade-curtains me opacity)
+                                        (.draggable (.$ me "#draggable") ({false "disable"
+                                                                           true "enable"} state)))))
 
                      (.listenTo me
                                 m
@@ -197,7 +216,6 @@
     :initialize
     (fn []
       (this-as me
-               (.log js/console (str "ClipView initialised, opts=" (.keys js/_ (.-options me))))
                (.listenTo me
                           (.-model me)
                           "change:selected"

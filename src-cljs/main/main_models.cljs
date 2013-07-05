@@ -13,10 +13,11 @@
     (.setAttribute (mg :mp4src) "src" video)
     ;; Turn off the sound for the test movies:
     (set! (.-muted v) true)
-    ;; Reset editing state associated with the current video:
+    ;; Reset editing state associated with the current video (before loading):
     (.set model (lib/JS> :slug slug
                          :keyStartPosition 0.0
-                         :keyEndPosition 1.0))))
+                         :keyEndPosition 1.0
+                         :dragEnabled false))))
 
 (def Clip
   (.extend
@@ -73,6 +74,9 @@
     (fn [pos] (this-as me
                       (set! (.-currentTime (.get me "video")) pos)))
 
+    :loadStart
+    (fn [] #_ (this-as me (.set me (lib/JS> :dragEnabled true))))
+
     :durationUpdate
     (fn [] (this-as me
                    (let [t (.-duration (.get me "video"))
@@ -98,11 +102,12 @@
 
     :playUpdate
     (fn [state]
-      (.log js/console (str "playUpdate: " state))
-      (this-as me (.set me (lib/JS> :status state))))
+      (this-as me
+               (.set me (lib/JS> :status state))
+               (if state (this-as me (.set me (lib/JS> :dragEnabled true))))))
 
     ;; defaults can also be a function.
-    :defaults {:slug (first m/SPLASH-ASSET)
+    :defaults {:slug "---"
                :status false
                :location 0.0
                :duration 0.0
@@ -111,6 +116,7 @@
                :normLocation 0.0
                :liveSecondHalf false    ; Tracks video position.
                :trapSecondHalf false    ; Trapped when frame drag begins, reset on release.
+               :dragEnabled false
                :dragging false
                :normedDragPosition 0.0
                :pixelDragPosition 0
@@ -134,6 +140,6 @@
                                              (.set main-model (lib/JS> :dirty false)))
                                   :error (fn [_ resp opts] (js/alert (.keys js/_ resp)))))))
 
-    :defaults {:slug (first m/SPLASH-ASSET)
+    :defaults {:slug "---"
                :keyStartPosition 0.0
                :keyEndPosition 1.0})))

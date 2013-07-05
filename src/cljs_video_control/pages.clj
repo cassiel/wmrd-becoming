@@ -54,15 +54,15 @@
      [:div.row
       [:div.span12
        [:div#vdiv
-        (let [{:keys [thumb video]} (apply lx/assets m/SPLASH-ASSET)
-              video-attrs {:preload "none"
+        (let [video-attrs {:preload "none"
                            :loop 1
-                           :poster thumb}
+                           ;;:poster "img/grey.gif"
+                           }
               video-attrs (if m/AUTOPLAY
                             (assoc video-attrs :autoplay 1)
                             video-attrs)]
           [:video#video video-attrs
-           [:source#mp4 {:src video
+           [:source#mp4 {;;:src video
                          :type "video/mp4"}]])
 
         [:div#curtainL]

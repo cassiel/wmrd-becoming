@@ -20,7 +20,8 @@
 
 (def standard
   (css [:#vdiv (video-aspect {:margin-left "auto"
-                              :margin-right "auto"} m/GALLEY-WIDTH)]
+                              :margin-right "auto"
+                              :background "#333"} m/GALLEY-WIDTH)]
        [:#video (video-aspect { } m/GALLEY-WIDTH)]
        [:.v {:width "100%"}]
        [:#draggable {:background "#FFF"
@@ -55,7 +56,7 @@
                    ;;:width "100000px"
                    }]
        ["#curtainL, #curtainR" (video-aspect {:background "#111"
-                                              :opacity 0.5} m/GALLEY-WIDTH)]
+                                              :opacity 0.0} m/GALLEY-WIDTH)]
        [:#curtainL {:border-right "1px solid #888"}]
        [:#curtainR {:border-left "1px solid #888"}]
        [:button#upload {:opacity 0.0
