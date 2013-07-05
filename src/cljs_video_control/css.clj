@@ -42,7 +42,7 @@
                          ;; :height "2em"
                           }]
        ["div.thumb-ident p" {:color "#FFF"
-                             :opacity 0.75
+                             :opacity m/SLUG-OPACITY
                              :text-shadow "#000 0 0 0.5em"
                              :font-family "Gill Sans, sans-serif"
                              :font-size "16pt"}]

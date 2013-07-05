@@ -1,6 +1,7 @@
 (ns main-views
   (:use [jayq.core :only [$]])
-  (:require [lib :as lib]))
+  (:require [lib :as lib]
+            [cljs-video-control.manifest :as m]))
 
 (defn draw-curtains
   [view]
@@ -188,9 +189,9 @@
                           (.-model me)
                           "change:selected"
                           (let [mg (lib/getter (.-model me))]
-                            (fn [] (if (mg :selected)
-                                    (.css (.$ me "div.thumb-ident > p") "color" "#F00")
-                                    (.css (.$ me "div.thumb-ident > p") "color" "#FFF")))))))
+                            (fn []
+                              (let [p (.$ me "div.thumb-ident > p")]
+                                (.fadeTo p "fast" (if (mg :selected) 1.0 m/SLUG-OPACITY))))))))
 
     ;; Pull template from page, cache as fn:
     :template

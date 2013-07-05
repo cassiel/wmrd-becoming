@@ -16,6 +16,8 @@
 
 (def THUMB-WIDTH 300)
 
+(def SLUG-OPACITY 0.5)                  ; Fades between this and 1.0.
+
 (def ASPECT (/ 24 10))
 
 (def SPLASH-ASSET ["00000" "00005531" "00005695"])
