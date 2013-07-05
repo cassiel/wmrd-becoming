@@ -41,4 +41,6 @@
   [p]
   (let [s (lx/field "upload")]
     (println "SERVER " s " PARAMS " p)
-    (client/post s {:form-params p})))
+    (if m/DO-UPLOAD
+      (client/post s {:form-params p})
+      (resp/response { }))))

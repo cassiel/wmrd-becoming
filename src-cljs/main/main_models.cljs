@@ -39,6 +39,7 @@
       (this-as me
                (switch-video me slug thumb video)
                (.set clip (lib/JS> :selected true))
+               (.set me (lib/JS> :dirty true))
                (.load me)))
 
     ;; Manual dragging of the selection frame. Drag start/stop.
@@ -48,7 +49,8 @@
                       (when-not how     ; Release drag:
                         (let [key-name (if (.get me "trapSecondHalf") :keyEndPosition :keyStartPosition)]
                           (.set me (lib/JS> :trapSecondHalf (.get me "liveSecondHalf")
-                                            key-name (.get me "normedDragPosition")))))))
+                                            key-name (.get me "normedDragPosition")
+                                            :dirty true))))))
 
     ;; Actual dragging.
     :dragPosition
@@ -111,7 +113,8 @@
                :trapSecondHalf false    ; Trapped when frame drag begins, reset on release.
                :dragging false
                :normedDragPosition 0.0
-               :pixelDragPosition 0})))
+               :pixelDragPosition 0
+               :dirty false})))
 
 ;; Model purely for sending video selection details to Field, via AJAX:
 
@@ -122,12 +125,14 @@
     :url "/upload"
 
     :upload
-    (fn [main-model] (this-as me (.save me
-                                       (lib/JS> :slug (.get main-model "slug")
-                                                :keyStartPosition (.get main-model "keyStartPosition")
-                                                :keyEndPosition (.get main-model "keyEndPosition"))
-                                       (lib/JS> :success (fn [] (.log js/console "Upload OK"))
-                                                :error (fn [_ resp opts] (js/alert resp))))))
+    (fn [main-model]
+      (this-as me (.save me
+                         (lib/JS> :slug (.get main-model "slug")
+                                  :keyStartPosition (.get main-model "keyStartPosition")
+                                  :keyEndPosition (.get main-model "keyEndPosition"))
+                         (lib/JS> :success (fn [] (.log js/console "Upload OK")
+                                             (.set main-model (lib/JS> :dirty false)))
+                                  :error (fn [_ resp opts] (js/alert (.keys js/_ resp)))))))
 
     :defaults {:slug (first m/SPLASH-ASSET)
                :keyStartPosition 0.0

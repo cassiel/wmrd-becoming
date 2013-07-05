@@ -44,7 +44,7 @@
        ["div.thumb-ident p" {:color "#FFF"
                              :opacity m/SLUG-OPACITY
                              :text-shadow "#000 0 0 0.5em"
-                             :font-family "Gill Sans, sans-serif"
+                             :font-family "'Gill Sans', sans-serif"
                              :font-size "16pt"}]
        [:#viewport {:height (:height (video-aspect { } m/THUMB-WIDTH))
                     :width "100%"
@@ -58,6 +58,15 @@
                                               :opacity 0.5} m/GALLEY-WIDTH)]
        [:#curtainL {:border-right "1px solid #888"}]
        [:#curtainR {:border-left "1px solid #888"}]
+       [:button#upload {:opacity 0.0
+                        :background "-webkit-linear-gradient(top, #333 0%, #111 100%)"
+                        :padding "8px 13px"
+                        :color "#AAA"
+                        :font-family "'Gill Sans', sans-serif"
+                        :font-size "17px"
+                        :border-radius "4px"
+                        :-webkit-border-radius "4px"
+                        :border (m/BUTTON-OUTLINE false)}]
        [:#debug {:display "none"}]))
 
 (def dragger

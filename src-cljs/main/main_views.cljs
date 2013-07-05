@@ -131,7 +131,14 @@
                                     (doseq [x [0 0.01]] (.jump m x))
                                     (.play m)
                                     #_ (js/setTimeout #(.load m) 2000))
-                                  (.render me))))
+                                  (.render me)))
+
+                     (.listenTo me
+                                m
+                                "change:dirty"
+                                (fn []
+                                  (.fadeTo (.$ me "#upload") "fast" ({true 1.0
+                                                                      false 0.0} (mg :dirty))))))
 
                    ;; Set top margin.
 
@@ -147,6 +154,12 @@
      "click #load" (lib/on-model-and-view #(.load %1))
      "click #pause" (lib/on-model-and-view #(.pause %1))
      "click #jump10" (lib/on-model-and-view #(.jump %1 10))
+
+     "mouseover #upload"
+     (fn [] (this-as me (.css (.$ me "#upload") "border" (m/BUTTON-OUTLINE true))))
+
+     "mouseout #upload"
+     (fn [] (this-as me (.css (.$ me "#upload") "border" (m/BUTTON-OUTLINE false))))
 
      "click #upload" (fn [] (this-as me (.upload (.-syncModel (.-options me))
                                                 (.-model me))))}
