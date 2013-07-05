@@ -24,7 +24,7 @@
             (let [a (lx/assets shot frame-lo frame-hi)]
               (assoc a :slug shot)))]
 
-    (resp/response (take 100 (sort-by :slug (map (comp make-item
+    (resp/response (take 300 (sort-by :slug (map (comp make-item
                                                        next
                                                        (partial re-find #"(\d+)_(\d+)_(\d+)*")
                                                        str)

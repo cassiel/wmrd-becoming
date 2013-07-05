@@ -209,7 +209,7 @@
                           (mg :video)))))
 
     ;; Render by replacing our HTML (initially an anonymous `div`) with a template
-    ;; rendered with the model properties (specifically "title" and "colour").
+    ;; rendered with the model properties.
     ;; (We replace the HTML of our `div`, so the template `div` is nested.)
     ;; Return ourself.
     :render
@@ -220,11 +220,11 @@
                ;; CSS class needed for sortable interaction etc - added to our
                ;; root `div`.
                (.addClass (.-$el me) "box")
-               (.attr (.$ me ".thumb")
+               #_ (.attr (.$ me ".thumb")
                       "src"
                       (.get (.-model me) "thumb"))
 
-               #_ (.attr (.$ me ".thumb")
+               (.attr (.$ me ".thumb")
                       "data-original"
                       (.get (.-model me) "thumb"))
 
@@ -274,7 +274,12 @@
                              (.listenTo me
                                         coll
                                         "sync"
-                                        (fn [] (.log js/console "collection event SYNC")))
+                                        (fn [] (.log js/console "collection event SYNC")
+                                          (.lazyload (.$ me "img.thumb")
+                                                     (lib/JS> :event "BANG"
+                                                              :effect "fadeIn"
+                                                              :container (.$ me "#storage")))
+                                          (js/setTimeout #(.trigger (.$ me "img.thumb") "BANG") 1000)))
 
                              (.render me))))
 

@@ -33,13 +33,24 @@
   (css [:body {:background "#111"}]
        [:.box (video-aspect {:float "left"
                              :margin "0 5px"} m/THUMB-WIDTH)]
-       [:#viewport {:height "100px"
+       [:img.thumb (video-aspect {:float "left"
+                                  :margin "0 5px"} m/THUMB-WIDTH)]
+       [:div.inner-box {:position "relative"}]
+       [:div.thumb-ident {:position "absolute"
+                          :top "0.5em"
+                          :right "0.5em"
+                         ;; :height "2em"
+                          }]
+       ["div.thumb-ident p" {:color "#FFF"
+                             :opacity 0.75
+                             :text-shadow "#000 0 0 0.5em"
+                             :font-family "Gill Sans, sans-serif"
+                             :font-size "16pt"}]
+       [:#viewport {:height (:height (video-aspect { } m/THUMB-WIDTH))
                     :width "100%"
                     :overflow "scroll"
                     :-webkit-overflow-scrolling "touch"}]
-       ["#clips div.row div" {:height (:height (video-aspect { } m/THUMB-WIDTH))
-                              ;;:width "1230px"
-                              }]
+       ["#clips > div.row > div" {:height (:height (video-aspect { } m/THUMB-WIDTH))}]
        [:#storage {:height "0px"
                    :width "100000px"}]
        ["#curtainL, #curtainR" (video-aspect {:background "#111"

@@ -45,7 +45,8 @@
     ;; Template for each of the clip thumbnail containers:
     [:script#item-template {:type "text/template"}
      [:div.inner-box
-      [:img.thumb]]]
+      [:img.thumb {:src "img/grey.gif"}]
+      [:div.thumb-ident [:p "<%= slug %>"]]]]
 
     [:div.container
      [:div#top-margin]
