@@ -284,6 +284,14 @@
                                         coll
                                         "sync"
                                         (fn [] (.log js/console "collection event SYNC")
+                                          ;; Set the scrollable storage width to allow all clips,
+                                          ;; each with left and right margin:
+                                          (let [storage-width (format "%dpx"
+                                                                      (* (+ m/THUMB-WIDTH (* 2 m/THUMB-MARGIN))
+                                                                         (.-length coll)))]
+                                            (.log js/console (str "storage width " storage-width))
+                                            (.width (.$ me "#storage") storage-width))
+
                                           (.lazyload (.$ me "img.thumb")
                                                      (lib/JS> :event "BANG"
                                                               :effect "fadeIn"

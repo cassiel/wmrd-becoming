@@ -34,7 +34,7 @@
        [:.box (video-aspect {:float "left"
                              :margin "0 5px"} m/THUMB-WIDTH)]
        [:img.thumb (video-aspect {:float "left"
-                                  :margin "0 5px"} m/THUMB-WIDTH)]
+                                  :margin (format "0 %dpx" m/THUMB-MARGIN)} m/THUMB-WIDTH)]
        [:div.inner-box {:position "relative"}]
        [:div.thumb-ident {:position "absolute"
                           :top "0.5em"
@@ -52,7 +52,8 @@
                     :-webkit-overflow-scrolling "touch"}]
        ["#clips > div.row > div" {:height (:height (video-aspect { } m/THUMB-WIDTH))}]
        [:#storage {:height "0px"
-                   :width "100000px"}]
+                   ;;:width "100000px"
+                   }]
        ["#curtainL, #curtainR" (video-aspect {:background "#111"
                                               :opacity 0.5} m/GALLEY-WIDTH)]
        [:#curtainL {:border-right "1px solid #888"}]

@@ -56,7 +56,8 @@
        [:div#vdiv
         (let [{:keys [thumb video]} (apply lx/assets m/SPLASH-ASSET)]
           [:video#video {:preload "none"
-                         ;;:autoplay 1
+                         :autoplay ({true 1
+                                     false 0} m/AUTOPLAY)
                          :loop 1
                          :poster thumb}
            [:source#mp4 {:src video
