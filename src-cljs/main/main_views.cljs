@@ -183,7 +183,14 @@
     :initialize
     (fn []
       (this-as me
-               (.log js/console (str "ClipView initialised, opts=" (.keys js/_ (.-options me))))))
+               (.log js/console (str "ClipView initialised, opts=" (.keys js/_ (.-options me))))
+               (.listenTo me
+                          (.-model me)
+                          "change:selected"
+                          (let [mg (lib/getter (.-model me))]
+                            (fn [] (if (mg :selected)
+                                    (.css (.$ me "div.thumb-ident > p") "color" "#F00")
+                                    (.css (.$ me "div.thumb-ident > p") "color" "#FFF")))))))
 
     ;; Pull template from page, cache as fn:
     :template
@@ -204,6 +211,7 @@
                                        (.-videoModel (.-options me))))
 
                  (.select (.-videoModel (.-options me))
+                          (.-model me)
                           (mg :slug)
                           (mg :thumb)
                           (mg :video)))))

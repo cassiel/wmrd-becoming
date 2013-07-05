@@ -5,9 +5,12 @@
 
 (defn- switch-video
   [model slug thumb video]
-  (let [v (.get model "video")]
+  (let [mg (lib/getter model)
+        v (mg :video)]
+    (.each (mg :collection)
+           (fn [clip] (.set clip (lib/JS> :selected false))))
     (.setAttribute v "poster" thumb)
-    (.setAttribute (.get model "mp4src") "src" video)
+    (.setAttribute (mg :mp4src) "src" video)
     ;; Turn off the sound for the test movies:
     (set! (.-muted v) true)
     ;; Reset editing state associated with the current video:
@@ -22,9 +25,7 @@
             (fn [] (this-as me
                            (.log js/console "Clip model initialized.")))
 
-            :defaults {:title "BOGUS"
-                       :image "XXBOGUS"
-                       :colour [0 0 0]})))
+            :defaults {:selected false})))
 
 (def VideoSystem
   (.extend
@@ -34,9 +35,10 @@
     (fn [] nil)
 
     :select
-    (fn [slug thumb video]
+    (fn [clip slug thumb video]
       (this-as me
                (switch-video me slug thumb video)
+               (.set clip (lib/JS> :selected true))
                (.load me)))
 
     ;; Manual dragging of the selection frame. Drag start/stop.

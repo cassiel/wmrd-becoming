@@ -8,8 +8,9 @@
 
 (def STATE
   (let [v (.getElementById js/document "video")
-        model (m/VideoSystem. (lib/JS> :video v))
         clips (c/ClipCollection.)
+        model (m/VideoSystem. (lib/JS> :video v
+                                       :collection clips))
         main-view (v/VideoView. (lib/JS> :el ".container"
                                          :model model
                                          :syncModel (m/Selection.)))]
