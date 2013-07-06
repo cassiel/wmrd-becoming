@@ -15,8 +15,8 @@
     (set! (.-muted v) true)
     ;; Reset editing state associated with the current video (before loading):
     (.set model (lib/JS> :slug slug
-                         :keyStartPosition 0.0
-                         :keyEndPosition 1.0
+                         :keyStartPosition 0.5
+                         :keyEndPosition 0.5
                          :dragEnabled false))))
 
 (def Clip
@@ -111,8 +111,8 @@
                :status false
                :location 0.0
                :duration 0.0
-               :keyStartPosition 0.0
-               :keyEndPosition 1.0
+               :keyStartPosition 0.5
+               :keyEndPosition 0.5
                :normLocation 0.0
                :liveSecondHalf false    ; Tracks video position.
                :trapSecondHalf false    ; Trapped when frame drag begins, reset on release.
@@ -141,5 +141,5 @@
                                   :error (fn [_ resp opts] (js/alert (.keys js/_ resp)))))))
 
     :defaults {:slug "---"
-               :keyStartPosition 0.0
-               :keyEndPosition 1.0})))
+               :keyStartPosition 0.5
+               :keyEndPosition 0.5})))
