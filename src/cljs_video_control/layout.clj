@@ -26,18 +26,18 @@
          [:meta {:name "viewport"
                  :content "width=device-width, initial-scale=1.0"}]
 
-         (hp/include-css "http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"
+         (hp/include-css "css/jquery-ui.css"
                          "css/bootstrap.min.css"
                          "css/bootstrap-responsive.min.css")]
         H
 
         (cons H (cons css/standard css-stems))
 
-        (conj H (hp/include-js "http://code.jquery.com/jquery-1.9.1.js"
+        (conj H (hp/include-js "js/jquery-1.9.1.js"
                                "js/jquery.lazyload.min.js"
-                               "http://code.jquery.com/ui/1.10.3/jquery-ui.js"
-                               "http://underscorejs.org/underscore.js"
-                               "http://backbonejs.org/backbone.js"))))
+                               "js/jquery-ui.js"
+                               "js/underscore.js"
+                               "js/backbone.js"))))
 
 (defn format-row
   "Format a set of divs centred into a row. The args are each [span, data].

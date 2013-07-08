@@ -19,7 +19,8 @@
             "auto" ["cljsbuild" "auto"]}
 
   :cljsbuild
-  {:crossovers [cljs-video-control.manifest]
+  {:crossovers [cljs-video-control.manifest
+                cljs-video-control.style]
    :crossover-path "_crossover-cljs"
 
    :builds

@@ -1,7 +1,8 @@
 (ns main-views
   (:use [jayq.core :only [$]])
   (:require [lib :as lib]
-            [cljs-video-control.manifest :as m]))
+            [cljs-video-control.manifest :as m]
+            [cljs-video-control.style :as st]))
 
 (defn fade-curtains
   [view level]
@@ -175,10 +176,10 @@
      "click #jump10" (lib/on-model-and-view #(.jump %1 10))
 
      "mouseover #upload"
-     (fn [] (this-as me (.css (.$ me "#upload") "border" (m/BUTTON-OUTLINE true))))
+     (fn [] (this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE true))))
 
      "mouseout #upload"
-     (fn [] (this-as me (.css (.$ me "#upload") "border" (m/BUTTON-OUTLINE false))))
+     (fn [] (this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE false))))
 
      "click #upload" (fn [] (this-as me (.upload (.-syncModel (.-options me))
                                                 (.-model me))))}
@@ -222,7 +223,7 @@
                           (let [mg (lib/getter (.-model me))]
                             (fn []
                               (let [p (.$ me "div.thumb-ident > p")]
-                                (.fadeTo p "fast" (if (mg :selected) 1.0 m/SLUG-OPACITY))))))))
+                                (.fadeTo p "fast" (if (mg :selected) 1.0 st/SLUG-OPACITY))))))))
 
     ;; Pull template from page, cache as fn:
     :template
@@ -318,7 +319,7 @@
                                           ;; Set the scrollable storage width to allow all clips,
                                           ;; each with left and right margin:
                                           (let [storage-width (format "%dpx"
-                                                                      (* (+ m/THUMB-WIDTH (* 2 m/THUMB-MARGIN))
+                                                                      (* (+ st/THUMB-WIDTH (* 2 st/THUMB-MARGIN))
                                                                          (.-length coll)))]
                                             (.log js/console (str "storage width " storage-width))
                                             (.width (.$ me "#storage") storage-width))
