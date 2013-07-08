@@ -1,9 +1,9 @@
 (ns cljs-video-control.manifest)
 
-(def SERVER {:host "192.168.1.110"
+(def SERVER {:host "192.168.2.3"
              :port 3000})
 
-(def ASSETS {:host "192.168.1.110"})
+(def ASSETS {:host "192.168.2.3"})
 
 (def FIELD {:host "192.168.2.9"
             :port 8080})
@@ -25,4 +25,4 @@
 
 (def AUTOPLAY true)
 
-(def DO-UPLOAD false)
+(def DO-UPLOAD true)

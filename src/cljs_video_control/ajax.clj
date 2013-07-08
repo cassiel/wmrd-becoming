@@ -39,8 +39,9 @@
 
 (defn upload
   [p]
-  (let [s (lx/field "upload")]
-    (println "SERVER " s " PARAMS " p)
-    (if m/DO-UPLOAD
-      (client/post s {:form-params p})
-      (resp/response { }))))
+  (if m/DO-UPLOAD
+    (let [s (lx/field "upload")
+          r (client/post s {:form-params p})]
+      (println (format ">> POST [%s: %s -> %s]" s p r))
+      r)
+    (resp/response { })))
