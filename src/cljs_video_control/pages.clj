@@ -58,7 +58,7 @@
                            :loop 1
                            ;;:poster "img/grey.gif"
                            }
-              video-attrs (if m/AUTOPLAY
+              video-attrs (if (:autoplay m/CONFIG)
                             (assoc video-attrs :autoplay 1)
                             video-attrs)]
           [:video#video video-attrs

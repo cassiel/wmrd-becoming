@@ -11,12 +11,12 @@
           (if-let [p (:port src)] (str ":" p) "")
           path))
 
-(def server (partial url m/SERVER))
-(def asset (partial url m/ASSETS))
-(def field (partial url m/FIELD))
+(def server (partial url (:server m/CONFIG)))
+(def asset (partial url (:assets m/CONFIG)))
+(def field (partial url (:field m/CONFIG)))
 
 (defn assets [shot frame-lo frame-hi]
-  (let [dir-name (format "%s/shot_%s_%s_%s" m/SHOTS-URL-ROOT shot frame-lo frame-hi)]
+  (let [dir-name (format "%s/shot_%s_%s_%s" (:shots-url-root m/CONFIG) shot frame-lo frame-hi)]
     {:thumb (asset (format "%s/image_half.jpg" dir-name))
      :video (asset (format "%s/imageList_all.mp4" dir-name))}))
 

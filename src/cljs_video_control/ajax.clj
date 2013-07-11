@@ -28,7 +28,7 @@
                                              next
                                              (partial re-find #"(\d+)_(\d+)_(\d+)*")
                                              str)
-                                       (seq (.listFiles (File. m/SHOTS-FILE-ROOT))))))))
+                                       (seq (.listFiles (File. (:shots-file-root m/CONFIG)))))))))
 
 (defn post-active
   "Post an item for the active sequence."
@@ -39,7 +39,7 @@
 
 (defn upload
   [p]
-  (if m/DO-UPLOAD
+  (if (:do-upload m/CONFIG)
     (let [s (lx/field "upload")
           r (client/post s {:form-params p})]
       (println (format ">> POST [%s: %s -> %s]" s p r))

@@ -1,17 +1,14 @@
 (ns cljs-video-control.manifest)
 
-(def SERVER {:host "192.168.2.3"
-             :port 3000})
+(def MACBOOK-LOCAL
+  {:server {:host "localhost"
+            :port 3000}
+   :assets {:host "localhost"}
+   :field {:host "192.168.2.9"
+           :port 8080}
+   :shots-file-root "/Users/nick/Sites/shots"
+   :shots-url-root "~nick/shots"
+   :autoplay true
+   :do-upload false})
 
-(def ASSETS {:host "192.168.2.3"})
-
-(def FIELD {:host "192.168.2.9"
-            :port 8080})
-
-(def SHOTS-FILE-ROOT "/home/nick/public_html/shots")
-
-(def SHOTS-URL-ROOT "~nick/shots")
-
-(def AUTOPLAY true)
-
-(def DO-UPLOAD true)
+(def CONFIG MACBOOK-LOCAL)
