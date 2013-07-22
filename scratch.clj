@@ -1,4 +1,5 @@
 (ns user
+  (:require (cljs-video-control [manifest :as m]))
   (:import (java.io File)))
 
 (defn foo [& args] (apply hash-map args))
@@ -33,7 +34,26 @@
            str)
      (seq (.listFiles (File. "/home/nick/Desktop/shots-some"))))
 
+(re-find #"(\d+)_(\d+)_(\d+)*" "shot_00000_00005531_00005695")
+
 (next
  (re-find #"(\d+)_(\d+)_(\d+)*" "shot_00000_00005531_00005695"))
 
 (name :A)
+
+(map (fn [line] (next (re-find #"(\d+)\s+(\d+)" line) ))
+     (line-seq
+      (clojure.java.io/reader
+       (File. "/Users/nick/Sites/shotList.txt"))))
+
+(reduce
+ (fn [r line] (let [[clip ts] (next (re-find #"(\d+)\s+(\d+)" line))]
+               (assoc r (Integer/parseInt clip) (Integer/parseInt ts))))
+ { }
+ (line-seq
+      (clojure.java.io/reader
+       (File. "/Users/nick/Sites/shotList.txt"))))
+
+(File.
+ (.getParentFile (File. (:shots-file-root m/CONFIG)))
+ "shotList.txt")

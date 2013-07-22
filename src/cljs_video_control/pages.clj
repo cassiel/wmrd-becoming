@@ -46,7 +46,7 @@
     [:script#item-template {:type "text/template"}
      [:div.inner-box
       [:img.thumb {:src "img/grey.gif"}]
-      [:div.thumb-ident [:p "<%= slug %>"]]]]
+      [:div.thumb-ident [:p "<%= slug %>" [:br] "<%= timestamp %>"]]]]
 
     [:div.container
      [:div#top-margin]

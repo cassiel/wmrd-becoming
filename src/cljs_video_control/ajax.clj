@@ -17,18 +17,43 @@
                                    "P1030419" "P1030422" "P1030434" "P1030541"
                                    "P1030581" "P1030610" "P1030643" "P1030681"]))))
 
+(defn- read-shot-times
+  "Map from shot/slug number to start time, from config file. (We don't actually
+   need this: it's in the directory names!)"
+  []
+  ;; Rather ugly: look in parent of file root.
+  (let [shot-file (File. (:shots-file-root m/CONFIG)
+                         "shotList.txt")]
+    (reduce
+     (fn [r line] (let [[clip ts] (next (re-find #"(\d+)\s+(\d+)" line))]
+                   (assoc r (Integer/parseInt clip) (Integer/parseInt ts))))
+     { }
+     (line-seq
+      (clojure.java.io/reader shot-file)))))
+
+(defn show-time [frame]
+  (let [secs (int (/ frame 25))
+        ss (mod secs 60)
+        mm (mod (int (/ secs 60)) 60)
+        hh (int (/ secs 3600))]
+    (format "%01d:%02d:%02d" hh mm ss)))
+
 (defn get-clips
   "Get clip list (eventually this'll be scrollable by 'bank')."
   []
-  (letfn [(make-item [[shot frame-lo frame-hi]]
-            (let [a (lx/assets shot frame-lo frame-hi)]
-              (assoc a :slug shot)))]
+  (let [shot-times (read-shot-times)]
+    (letfn [(make-item [[shot frame-lo frame-hi]]
+              (let [a (lx/assets shot frame-lo frame-hi)]
+                (assoc a
+                  :slug shot
+                  :timestamp (show-time (Integer/parseInt frame-lo)))))]
 
-    (resp/response (sort-by :slug (map (comp make-item
-                                             next
-                                             (partial re-find #"(\d+)_(\d+)_(\d+)*")
-                                             str)
-                                       (seq (.listFiles (File. (:shots-file-root m/CONFIG)))))))))
+      (resp/response (sort-by :slug (map (comp make-item
+                                               next
+                                               (partial re-find #"(\d+)_(\d+)_(\d+)*")
+                                               str)
+                                         (seq (.listFiles (File. (:shots-file-root m/CONFIG)
+                                                                 "shots")))))))))
 
 (defn post-active
   "Post an item for the active sequence."
