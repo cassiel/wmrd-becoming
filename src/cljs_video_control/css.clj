@@ -50,7 +50,8 @@
                              :font-size "16pt"}]
        [:#viewport {:height (:height (video-aspect { } st/THUMB-WIDTH))
                     :width "100%"
-                    :overflow "scroll"
+                    :overflow-x "scroll"
+                    :overflow-y "hidden"
                     :-webkit-overflow-scrolling "touch"}]
        ["#clips > div.row > div" {:height (:height (video-aspect { } st/THUMB-WIDTH))}]
        [:#storage {:height "0px"
