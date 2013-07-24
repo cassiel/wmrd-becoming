@@ -41,19 +41,18 @@
 (defn get-clips
   "Get clip list (eventually this'll be scrollable by 'bank')."
   []
-  (let [shot-times (read-shot-times)]
-    (letfn [(make-item [[shot frame-lo frame-hi]]
-              (let [a (lx/assets shot frame-lo frame-hi)]
-                (assoc a
-                  :slug shot
-                  :timestamp (show-time (Integer/parseInt frame-lo)))))]
+  (letfn [(make-item [[shot frame-lo frame-hi]]
+            (let [a (lx/assets shot frame-lo frame-hi)]
+              (assoc a
+                :slug shot
+                :timestamp (show-time (Integer/parseInt frame-lo)))))]
 
-      (resp/response (sort-by :slug (map (comp make-item
-                                               next
-                                               (partial re-find #"(\d+)_(\d+)_(\d+)*")
-                                               str)
-                                         (seq (.listFiles (File. (:shots-file-root m/CONFIG)
-                                                                 "shots")))))))))
+    (resp/response (sort-by :slug (map (comp make-item
+                                             next
+                                             (partial re-find #"(\d+)_(\d+)_(\d+)*")
+                                             str)
+                                       (seq (.listFiles (File. (:shots-file-root m/CONFIG)
+                                                               "shots"))))))))
 
 (defn post-active
   "Post an item for the active sequence."
