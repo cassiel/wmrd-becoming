@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.5"]
                  [jayq "2.3.0"]
+                 [hiccup "1.0.4"]       ; Needed for nrepl.
                  [clj-yaml "0.4.0"]
                  [ring/ring-json "0.2.0"]
                  [clj-http "0.7.4"]]

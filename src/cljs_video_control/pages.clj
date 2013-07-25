@@ -80,7 +80,9 @@
      [:div {:style "height: 10px"}]
 
      (lx/format-row 12
-                    [4 [:button#upload.v "UPLOAD"]])
+                    [4 [:button#upload.big-button "UPLOAD"]]
+                    [2 [:button#do-3d.big-button "3D"]]
+                    [2 [:button#pause.big-button "PAUSE"]])
 
      [:div {:style "height: 10px"}]
 

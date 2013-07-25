@@ -25,6 +25,15 @@
                               :background "#333"} st/GALLEY-WIDTH)]
        [:#video (video-aspect { } st/GALLEY-WIDTH)]
        [:.v {:width "100%"}]
+       [:.big-button {:background "-webkit-linear-gradient(top, #333 0%, #111 100%)"
+                      :padding "8px 13px"
+                      :width "100%"
+                      :color "#AAA"
+                      :font-family "'Gill Sans', sans-serif"
+                      :font-size "17px"
+                      :border-radius "4px"
+                      :-webkit-border-radius "4px"
+                      :border (st/BUTTON-OUTLINE false)}]
        [:#draggable {:background "#FFF"
                      :opacity 0}]
        ["#draggable h2.firstHalf, #draggable h2.secondHalf" {:display "none"}]
@@ -61,15 +70,7 @@
                                               :opacity 0.0} st/GALLEY-WIDTH)]
        [:#curtainL {:border-right "1px solid #888"}]
        [:#curtainR {:border-left "1px solid #888"}]
-       [:button#upload {:opacity 0.0
-                        :background "-webkit-linear-gradient(top, #333 0%, #111 100%)"
-                        :padding "8px 13px"
-                        :color "#AAA"
-                        :font-family "'Gill Sans', sans-serif"
-                        :font-size "17px"
-                        :border-radius "4px"
-                        :-webkit-border-radius "4px"
-                        :border (st/BUTTON-OUTLINE false)}]
+       [:button#upload {:opacity 0.0}]
        [:#debug {:display "none"}]))
 
 (def dragger

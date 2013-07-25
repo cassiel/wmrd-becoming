@@ -175,11 +175,18 @@
      "click #pause" (lib/on-model-and-view #(.pause %1))
      "click #jump10" (lib/on-model-and-view #(.jump %1 10))
 
-     "mouseover #upload"
-     (fn [] (this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE true))))
+     "mouseover .big-button"
+     (fn [ev]
+       ;;(this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE true)))
+       (.setProperty (.-style (.-target ev))
+                     "border" (st/BUTTON-OUTLINE true)))
 
-     "mouseout #upload"
-     (fn [] (this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE false))))
+     "mouseout .big-button"
+     ;;(fn [] (this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE false))))
+     (fn [ev]
+       (.setProperty (.-style (.-target ev))
+                     "border"
+                     (st/BUTTON-OUTLINE false)))
 
      "click #upload" (fn [] (this-as me (.upload (.-syncModel (.-options me))
                                                 (.-model me))))}

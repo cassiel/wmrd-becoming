@@ -1,5 +1,7 @@
 (ns user
-  (:require (cljs-video-control [manifest :as m]))
+  (:require (cljs-video-control [manifest :as m]
+                                [layout :as lx])
+            [clj-http.client :as client])
   (:import (java.io File)))
 
 (defn foo [& args] (apply hash-map args))
@@ -57,3 +59,19 @@
 (File.
  (.getParentFile (File. (:shots-file-root m/CONFIG)))
  "shotList.txt")
+
+;;--- Testing configuration web requests.
+
+(client/post
+ (lx/field "upload")
+ {:form-params {:slug "00010"
+                :keyStartPosition "0.5"
+                :keyEndPosition "0.5"}})
+
+(client/post
+ (lx/field "config")
+ {:form-params {:stereo "1"}})
+
+(client/post
+ (lx/field "mode")
+ {:form-params {:running "1"}})
