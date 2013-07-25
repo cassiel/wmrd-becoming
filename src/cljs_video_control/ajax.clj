@@ -61,11 +61,16 @@
   (resp/response {:id 999
                   :title "SAVED"}))
 
-(defn upload
-  [p]
+(defn- exchange
+  [uri p]
   (if (:do-upload m/CONFIG)
-    (let [s (lx/field "upload")
+    (let [s (lx/field uri)
           r (client/post s {:form-params p})]
       (println (format ">> POST [%s: %s -> %s]" s p r))
       r)
-    (resp/response { })))
+    (resp/response { }))
+  )
+
+(def upload (partial exchange "upload"))
+(def config (partial exchange "config"))
+(def mode (partial exchange "mode"))

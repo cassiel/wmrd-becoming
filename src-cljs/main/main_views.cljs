@@ -91,6 +91,8 @@
                      (position-frame me 0))
 
                    (let [m (.-model me)
+                         cm (.-configModel (.-options me))
+                         mm (.-modeModel (.-options me))
                          mg (lib/getter m)]
                      ;; Re-render on any change to playback location (or duration, on load):
                      (.listenTo me
@@ -158,7 +160,28 @@
                                 "change:dirty"
                                 (fn []
                                   (.fadeTo (.$ me "#upload") "fast" ({true 1.0
-                                                                      false 0.0} (mg :dirty))))))
+                                                                      false 0.0} (mg :dirty)))))
+
+                     (.listenTo me
+                                cm
+                                "change:in3d"
+                                (fn []
+                                  (.log js/console (str "3D change detected, now "
+                                                        (.get cm "in3d")))
+                                  (.css (.$ me "#do-2d")
+                                        "background"
+                                        (st/BUTTON-ACTIVE (- 1 (.get cm "in3d"))))))
+
+                     (.listenTo me
+                                mm
+                                "change:running"
+                                (fn []
+                                  (.log js/console (str "running change detected, now "
+                                                        (.get mm "running")))
+                                  (.css (.$ me "#pause-it")
+                                        "background"
+                                        (st/BUTTON-ACTIVE (- 1 (.get mm "running"))))
+                                  ))
 
                    ;; Set top margin.
 
@@ -166,7 +189,7 @@
                                                              (.height (.-$el me))) 2)))
 
                    ;; Initial render:
-                   (.render me)))
+                   (.render me))))
 
     ;; Events generally go into the model.
     :events
@@ -188,8 +211,12 @@
                      "border"
                      (st/BUTTON-OUTLINE false)))
 
-     "click #upload" (fn [] (this-as me (.upload (.-syncModel (.-options me))
-                                                (.-model me))))}
+     "click #upload" (fn [] (this-as me (.upload (.-uploadModel (.-options me))
+                                                (.-model me))))
+
+     "click #do-2d" (fn [] (this-as me (.flip3d (.-configModel (.-options me)))))
+
+     "click #pause-it" (fn [] (this-as me (.flipRunning (.-modeModel (.-options me)))))}
 
     :render
     (lib/on-model-and-view (fn [m v]

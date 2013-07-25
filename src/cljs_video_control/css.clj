@@ -25,7 +25,7 @@
                               :background "#333"} st/GALLEY-WIDTH)]
        [:#video (video-aspect { } st/GALLEY-WIDTH)]
        [:.v {:width "100%"}]
-       [:.big-button {:background "-webkit-linear-gradient(top, #333 0%, #111 100%)"
+       [:.big-button {:background (st/BUTTON-ACTIVE 0)
                       :padding "8px 13px"
                       :width "100%"
                       :color "#AAA"

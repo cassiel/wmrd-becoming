@@ -70,7 +70,7 @@
 
 (client/post
  (lx/field "config")
- {:form-params {:stereo "1"}})
+ {:form-params {:stereo "0"}})
 
 (client/post
  (lx/field "mode")

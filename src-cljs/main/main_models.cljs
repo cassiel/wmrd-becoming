@@ -122,9 +122,10 @@
                :pixelDragPosition 0
                :dirty false})))
 
-;; Model purely for sending video selection details to Field, via AJAX:
+;; Model purely for sending video selection details to Field, via AJAX. (We need
+;; other models for config and mode.)
 
-(def Selection
+(def Upload
   (.extend
    Backbone.Model
    (lib/JS>
@@ -143,3 +144,31 @@
     :defaults {:slug "---"
                :keyStartPosition 0.5
                :keyEndPosition 0.5})))
+
+(def Config
+  (.extend
+   Backbone.Model
+   (lib/JS>
+    :url "/config"
+
+    :flip3d
+    (fn []
+      (this-as me
+               (.save me
+                      (lib/JS> :in3d (- 1 (.get me "in3d"))))))
+
+    :defaults {:in3d 1})))
+
+(def Mode
+  (.extend
+   Backbone.Model
+   (lib/JS>
+    :url "/mode"
+
+    :flipRunning
+    (fn []
+      (this-as me
+               (.save me
+                      (lib/JS> :running (- 1 (.get me "running"))))))
+
+    :defaults {:running 1})))

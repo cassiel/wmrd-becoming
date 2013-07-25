@@ -13,7 +13,9 @@
                                        :collection clips))
         main-view (v/VideoView. (lib/JS> :el ".container"
                                          :model model
-                                         :syncModel (m/Selection.)))]
+                                         :uploadModel (m/Upload.)
+                                         :configModel (m/Config.)
+                                         :modeModel (m/Mode.)))]
     (lib/JS> :video v
              :model model
              :collection clips
