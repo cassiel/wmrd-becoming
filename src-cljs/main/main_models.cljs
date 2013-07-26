@@ -155,7 +155,9 @@
     (fn []
       (this-as me
                (.save me
-                      (lib/JS> :in3d (- 1 (.get me "in3d"))))))
+                      (lib/JS> :in3d (- 1 (.get me "in3d")))
+                      (lib/JS> :success (fn [model, response, options] (.log js/console response))
+                               :error (fn [model, xhr, options] (js/alert "FAIL"))))))
 
     :defaults {:in3d 1})))
 
