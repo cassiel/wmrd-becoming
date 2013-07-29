@@ -68,8 +68,8 @@
                    }]
        ["#curtainL, #curtainR" (video-aspect {:background "#111"
                                               :opacity 0.0} st/GALLEY-WIDTH)]
-       [:#curtainL {:border-right "1px solid #888"}]
-       [:#curtainR {:border-left "1px solid #888"}]
+       [:#curtainL {:border-right (st/CURTAIN-TRIM-HIGHLIGHT false)}]
+       [:#curtainR {:border-left (st/CURTAIN-TRIM-HIGHLIGHT false)}]
        [:button#upload {:opacity 0.0}]
        [:#debug {:display "none"}]))
 

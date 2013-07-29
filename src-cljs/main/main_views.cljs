@@ -12,7 +12,7 @@
       (.fadeTo c "slow" level))))
 
 (defn draw-curtains
-  [view]
+  [view highlight-L highlight-R]
   (let [v (.$ view "#video")
         d (.$ view "#draggable")
         video-width (.width v)
@@ -24,6 +24,8 @@
         right-curtain (.$ view "#curtainR")]
     (.width left-curtain l-width)
     (.width right-curtain r-width)
+    (.css left-curtain "border-right" (st/CURTAIN-TRIM-HIGHLIGHT highlight-L))
+    (.css right-curtain "border-left" (st/CURTAIN-TRIM-HIGHLIGHT highlight-R))
     (.position left-curtain (lib/JS> :my "right top"
                                      :at "left top"
                                      :of d))
@@ -46,7 +48,7 @@
     (.position d (lib/JS> :my "left top"
                           :at (format "left+%d top" tl-pixel-pos)
                           :of v))
-    (draw-curtains view)))
+    (draw-curtains view false false)))
 
 (def VideoView
   (.extend
@@ -118,7 +120,7 @@
                      (.listenTo me
                                 m
                                 "change:pixelDragPosition"
-                                (fn [] (draw-curtains me)))
+                                (fn [] (draw-curtains me true true)))
 
                      (.listenTo me
                                 m

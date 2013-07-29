@@ -9,6 +9,9 @@
 (def BUTTON-OUTLINE {false "1px solid #444"
                      true "1px solid #888"})
 
+(def CURTAIN-TRIM-HIGHLIGHT {false "1px solid #888"
+                             true "2px solid #FFF"})
+
 (def SLUG-OPACITY 0.5)                  ; Fades between this and 1.0.
 
 (def BUTTON-ACTIVE {0 "-webkit-linear-gradient(top, #333 0%, #111 100%)"
