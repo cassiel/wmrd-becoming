@@ -48,7 +48,7 @@
     (.position d (lib/JS> :my "left top"
                           :at (format "left+%d top" tl-pixel-pos)
                           :of v))
-    (draw-curtains view false false)))
+    (draw-curtains view (not (mg :liveSecondHalf)) (mg :liveSecondHalf))))
 
 (def VideoView
   (.extend
@@ -120,7 +120,7 @@
                      (.listenTo me
                                 m
                                 "change:pixelDragPosition"
-                                (fn [] (draw-curtains me true true)))
+                                (fn [] (draw-curtains me (not (mg :trapSecondHalf)) (mg :trapSecondHalf))))
 
                      (.listenTo me
                                 m
