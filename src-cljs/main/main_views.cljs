@@ -202,7 +202,8 @@
      (fn [ev]
        ;;(this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE true)))
        (.setProperty (.-style (.-target ev))
-                     "border" (st/BUTTON-OUTLINE true)))
+                     "border"
+                     (st/BUTTON-OUTLINE true)))
 
      "mouseout .big-button"
      ;;(fn [] (this-as me (.css (.$ me "#upload") "border" (st/BUTTON-OUTLINE false))))
