@@ -32,11 +32,12 @@
       (clojure.java.io/reader shot-file)))))
 
 (defn show-time [frame]
-  (let [secs (int (/ frame 25))
-        ss (mod secs 60)
-        mm (mod (int (/ secs 60)) 60)
-        hh (int (/ secs 3600))]
-    (format "%01d:%02d:%02d" hh mm ss)))
+  (let [secs (int (/ frame 24))
+        ss (format "%02ds" (mod secs 60))
+        mm (format "%02dm" (mod (int (/ secs 60)) 60))
+        hh (int (/ secs 3600))
+        hh (if (pos? hh) (format "%dh" hh) "")]
+    (str hh mm ss)))
 
 (defn get-clips
   "Get clip list (eventually this'll be scrollable by 'bank')."

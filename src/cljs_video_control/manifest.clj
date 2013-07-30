@@ -58,7 +58,7 @@
    :do-upload false})
 
 (def BECOMING1-LINKSYS
-  {:server {:host "localhost"
+  {:server {:host "becoming1.lan"
             :port 3000}
    :assets {:host "becoming1.lan"}
    :field {:host "becoming1.lan"
@@ -68,4 +68,4 @@
    :autoplay true
    :do-upload true})
 
-(def CONFIG MACBOOK-LOCAL)
+(def CONFIG BECOMING1-LINKSYS)
