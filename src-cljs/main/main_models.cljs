@@ -139,7 +139,10 @@
                                   :keyEndPosition (.get main-model "keyEndPosition"))
                          (lib/JS> :success (fn [] (.log js/console "Upload OK")
                                              (.set main-model (lib/JS> :dirty false)))
-                                  :error (fn [_ resp opts] (js/alert (.keys js/_ resp)))))))
+                                  :error (fn [ev resp opts]
+                                           (.log js/console ev)
+                                           (js/alert (.keys js/_ resp))
+                                           (.log js/console resp))))))
 
     :defaults {:slug "---"
                :keyStartPosition 0.5
