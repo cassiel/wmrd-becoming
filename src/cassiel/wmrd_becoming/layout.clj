@@ -1,7 +1,7 @@
-(ns cljs-video-control.layout
+(ns cassiel.wmrd-becoming.layout
   (:require [hiccup.page :as hp]
-            (cljs-video-control [manifest :as m]
-                                [css :as css])))
+            (cassiel.wmrd-becoming [manifest :as m]
+                                   [css :as css])))
 
 (defn url
   "Build a URL, using a `src` from `manifest`."

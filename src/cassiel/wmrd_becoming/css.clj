@@ -1,7 +1,7 @@
-(ns cljs-video-control.css
+(ns cassiel.wmrd-becoming.css
   (:require [hiccup.core :as c]
-            (cljs-video-control [manifest :as m]
-                                [style :as st])))
+            (cassiel.wmrd-becoming [manifest :as m]
+                                   [style :as st])))
 
 (defn- css-rule [rule]
   (let [sels (reverse (rest (reverse rule)))

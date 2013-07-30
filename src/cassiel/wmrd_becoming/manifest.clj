@@ -1,4 +1,4 @@
-(ns cljs-video-control.manifest)
+(ns cassiel.wmrd-becoming.manifest)
 
 (def MACBOOK-LOCAL
   {:server {:host "localhost"

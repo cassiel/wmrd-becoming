@@ -1,6 +1,6 @@
-(ns cljs-video-control.core-test
+(ns cassiel.wmrd-becoming.core-test
   (:use clojure.test
-        cljs-video-control.core))
+        cassiel.wmrd-becoming.core))
 
 (deftest a-test
   (testing "FIXME, I fail."

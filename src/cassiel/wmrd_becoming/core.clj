@@ -1,12 +1,11 @@
-(ns cljs-video-control.core
+(ns cassiel.wmrd-becoming.core
   (:use compojure.core)
   (:require (compojure [route :as route]
                        [handler :as handler])
             [ring.util [response :as resp]]
             (ring.middleware [json :as json])
-            (cljs-video-control [ajax :as ajax]
-                                [pages :as pages]
-                                [demo-pages :as dp])))
+            (cassiel.wmrd-becoming [ajax :as ajax]
+                                   [pages :as pages])))
 
 (defn json-test []
   (resp/response
@@ -22,15 +21,7 @@
 
 (defroutes my-routes
   ;; HTML pages
-  (GET "/" [] (pages/render-index))
-  (GET "/demo-backbone" [] (dp/render-demo-backbone))
-  (GET "/video-backbone" [] (dp/render-video-backbone))
-  (GET "/video-framing" [] (dp/render-video-framing))
-  (GET "/range-slider" [] (dp/render-range-slider))
-  (GET "/search-template" [] (dp/search-template))
-  (GET "/dragger" [] (dp/render-dragger))
-  (GET "/sortable" [] (dp/render-sortable))
-  (GET "/main" [] (pages/render-main))
+  (GET "/" [] (pages/render-main))
 
   ;; JSON testing:
   (GET "/json-test" [] (json-test))

@@ -1,8 +1,8 @@
 (ns main-views
   (:use [jayq.core :only [$]])
   (:require [lib :as lib]
-            [cljs-video-control.manifest :as m]
-            [cljs-video-control.style :as st]))
+            [cassiel.wmrd-becoming.manifest :as m]
+            [cassiel.wmrd-becoming.style :as st]))
 
 (defn fade-curtains
   [view level]

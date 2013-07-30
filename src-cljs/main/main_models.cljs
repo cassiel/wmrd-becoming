@@ -1,7 +1,7 @@
 (ns main-models
   (:use [jayq.core :only [$]])
   (:require [lib :as lib]
-            [cljs-video-control.manifest :as m]))
+            [cassiel.wmrd-becoming.manifest :as m]))
 
 (defn- switch-video
   [model slug thumb video]

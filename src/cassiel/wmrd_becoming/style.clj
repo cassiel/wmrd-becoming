@@ -1,4 +1,4 @@
-(ns cljs-video-control.style)
+(ns cassiel.wmrd-becoming.style)
 
 (def ASPECT (/ 24 10))
 

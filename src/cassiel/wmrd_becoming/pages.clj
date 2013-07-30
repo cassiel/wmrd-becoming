@@ -1,41 +1,8 @@
-(ns cljs-video-control.pages
+(ns cassiel.wmrd-becoming.pages
   (:require [hiccup.page :as hp]
-            (cljs-video-control [manifest :as m]
-                                [css :as css]
-                                [layout :as lx])))
-
-(defn render-index []
-  (hp/html5
-   (lx/standard-head "Index" css/other)
-
-   [:body
-    [:div.container
-     [:h2 "Pages"]
-
-     [:ul
-      [:li [:a {:href "demo-backbone"}
-            "demo: simple examples via backbone.js"]]
-
-      [:li [:a {:href "video-backbone"}
-            "video control tests"]]
-
-      [:li [:a {:href "video-framing"}
-            "video frame selection tests"]]
-
-      [:li [:a {:href "range-slider"}
-            "a simple range slider"]]
-
-      [:li [:a {:href "search-template"}
-            "a simple search and templating test"]]
-
-      [:li [:a {:href "dragger"}
-            "a simple drag-and-drop example"]]
-
-      [:li [:a {:href "sortable"}
-            "sortable items by dragging"]]
-
-      [:li [:a {:href "main"}
-            "main"]]]]]))
+            (cassiel.wmrd-becoming [manifest :as m]
+                                   [css :as css]
+                                   [layout :as lx])))
 
 (defn render-main []
   (hp/html5

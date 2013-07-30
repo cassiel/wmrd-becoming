@@ -1,9 +1,9 @@
-(ns cljs-video-control.ajax
+(ns cassiel.wmrd-becoming.ajax
   "Methods for AJAX interaction."
   (:require [ring.util [response :as resp]]
             [clj-http.client :as client]
-            (cljs-video-control [manifest :as m]
-                                [layout :as lx]))
+            (cassiel.wmrd-becoming [manifest :as m]
+                                   [layout :as lx]))
   (:import (java.io File)))
 
 (defn get-store

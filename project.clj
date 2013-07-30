@@ -1,6 +1,6 @@
-(defproject cljs-video-control "0.1.0-SNAPSHOT"
-  :description "Example HTML5 video control via ClojureScript"
-  :url "https://github.com/cassiel/cljs-video-control"
+(defproject eu.cassiel/wmrd-becoming "0.1.0-SNAPSHOT"
+  :description "Control front-end for Becoming"
+  :url "https://github.com/cassiel/wmrd-becoming"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
@@ -20,47 +20,15 @@
             "auto" ["cljsbuild" "auto"]}
 
   :cljsbuild
-  {:crossovers [cljs-video-control.manifest
-                cljs-video-control.style]
+  {:crossovers [cassiel.wmrd-becoming.manifest
+                cassiel.wmrd-becoming.style]
    :crossover-path "_crossover-cljs"
 
    :builds
-   [{:source-paths ["src-cljs/lib" "src-cljs/demo_backbone"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/demo_backbone.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/dragger"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/dragger.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/sortable"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/sortable.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/search_template"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/search_template.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/range_slider"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/range_slider.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/demo_yui"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/demo_yui.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/video_backbone"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/video_backbone.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/video_framing"]
-     :compiler {:pretty-print true
-                :output-to "_dyn-resources/public/js/video_framing.js"
-                :optimizations :simple}}
-    {:source-paths ["src-cljs/lib" "src-cljs/main"]
+   [{:source-paths ["src-cljs/lib" "src-cljs/main"]
      :compiler {:pretty-print true
                 :output-to "_dyn-resources/public/js/main.js"
                 :optimizations :simple}}]}
 
   :ring {:port 3000
-         :handler cljs-video-control.core/app})
+         :handler cassiel.wmrd-becoming.core/app})
