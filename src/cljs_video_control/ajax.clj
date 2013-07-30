@@ -32,7 +32,7 @@
       (clojure.java.io/reader shot-file)))))
 
 (defn show-time [frame]
-  (let [secs (int (/ frame 25))
+  (let [secs (int (/ frame 24))
         ss (mod secs 60)
         mm (mod (int (/ secs 60)) 60)
         hh (int (/ secs 3600))]
