@@ -4,17 +4,19 @@
             [cassiel.wmrd-becoming.manifest :as m]))
 
 (defn- switch-video
-  [model slug thumb video]
+  [model clip-model]
   (let [mg (lib/getter model)
+        mc (lib/getter clip-model)
         v (mg :video)]
     (.each (mg :collection)
            (fn [clip] (.set clip (lib/JS> :selected false))))
-    (.setAttribute v "poster" thumb)
-    (.setAttribute (mg :mp4src) "src" video)
+    (.setAttribute v "poster" (mc :thumb))
+    (.setAttribute (mg :mp4src) "src" (mc :video))
     ;; Turn off the sound for the test movies:
     (set! (.-muted v) true)
     ;; Reset editing state associated with the current video (before loading):
-    (.set model (lib/JS> :slug slug
+    (.set model (lib/JS> :clipModel clip-model
+                         :slug (mc :slug)
                          :keyStartPosition 0.5
                          :keyEndPosition 0.5
                          :dragEnabled false))))
@@ -40,7 +42,7 @@
     :select
     (fn [clip slug thumb video]
       (this-as me
-               (switch-video me slug thumb video)
+               (switch-video me clip)
                (.set clip (lib/JS> :selected true))
                (.set me (lib/JS> :dirty true))
                (.load me)))
@@ -140,7 +142,9 @@
                                   :keyStartPosition (.get main-model "keyStartPosition")
                                   :keyEndPosition (.get main-model "keyEndPosition"))
                          (lib/JS> :success (fn [] (.log js/console "Upload OK")
-                                             (.set main-model (lib/JS> :dirty false)))
+                                             (.set main-model (lib/JS> :dirty false))
+                                             (.set (.get main-model "clipModel")
+                                                   (lib/JS> :used true)))
                                   :error (fn [ev resp opts]
                                            (.log js/console ev)
                                            (js/alert (.keys js/_ resp))

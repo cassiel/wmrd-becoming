@@ -300,7 +300,8 @@
                           (mg :video))
 
                  ;; Locally mark as used. (Not quite right: that happens on upload.)
-                 (.set (.-model me) "used" true))))
+                 ;;(.set (.-model me) "used" true)
+                 )))
 
     ;; Render by replacing our HTML (initially an anonymous `div`) with a template
     ;; rendered with the model properties.
