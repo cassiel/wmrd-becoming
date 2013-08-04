@@ -294,10 +294,7 @@
                                        (.-videoModel (.-options me))))
 
                  (.select (.-videoModel (.-options me))
-                          (.-model me)
-                          (mg :slug)
-                          (mg :thumb)
-                          (mg :video))
+                          (.-model me))
 
                  ;; Locally mark as used. (Not quite right: that happens on upload.)
                  ;;(.set (.-model me) "used" true)

@@ -46,7 +46,8 @@
             (let [a (lx/assets shot frame-lo frame-hi)]
               (assoc a
                 :slug shot
-                :timestamp (show-time (Integer/parseInt frame-lo)))))]
+                :timestamp (show-time (Integer/parseInt frame-lo))
+                :used (even? (Integer/parseInt shot)))))]
 
     (resp/response (sort-by :slug (map (comp make-item
                                              next

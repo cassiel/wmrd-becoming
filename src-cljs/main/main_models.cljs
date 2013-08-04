@@ -29,8 +29,7 @@
                            (.log js/console "Clip model initialized.")))
 
             ;; Text ident information must get planted here during the AJAX data load.
-            :defaults {:selected false
-                       :used false})))
+            :defaults {:selected false})))
 
 (def VideoSystem
   (.extend
@@ -40,7 +39,7 @@
     (fn [] nil)
 
     :select
-    (fn [clip slug thumb video]
+    (fn [clip]
       (this-as me
                (switch-video me clip)
                (.set clip (lib/JS> :selected true))

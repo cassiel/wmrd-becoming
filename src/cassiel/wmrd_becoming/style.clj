@@ -22,4 +22,4 @@
                     1 "-webkit-linear-gradient(top, #633 0%, #411 100%)"})
 
 (def USED-OPACITY {false 0.0
-                   true  0.3})
+                   true  0.5})
