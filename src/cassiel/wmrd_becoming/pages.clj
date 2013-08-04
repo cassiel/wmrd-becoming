@@ -13,7 +13,9 @@
     [:script#item-template {:type "text/template"}
      [:div.inner-box
       [:img.thumb {:src "img/grey.gif"}]
-      [:div.thumb-ident [:p "<%= slug %>" [:br] "<%= timestamp %>"]]]]
+      [:div.thumb-ident [:p "<%= slug %>" [:br] "<%= timestamp %>"]]
+      ;; Overlay translucent panel to mark shots which have been used. (Initially invisible.)
+      [:div.thumb-cover]]]
 
     [:div.container
      [:div#top-margin]

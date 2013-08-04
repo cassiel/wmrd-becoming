@@ -1,6 +1,6 @@
 `-*- word-wrap: t; -*-`
 
-# cljs-video-control
+# smrc-becoming
 
 This project is a collection of test pages for a video selection and control system currently under construction for [Wayne McGregor|Random Dance](http://www.randomdance.org). While the final system is going to be quite complex, I've built a collection of demo pages to test various isolated components; these should be independent and reasonably easy to understand. The demos include on-page sliders, drag-and-drop, and assorted random element rewriting.
 

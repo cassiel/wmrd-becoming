@@ -26,7 +26,9 @@
             (fn [] (this-as me
                            (.log js/console "Clip model initialized.")))
 
-            :defaults {:selected false})))
+            ;; Text ident information must get planted here during the AJAX data load.
+            :defaults {:selected false
+                       :used false})))
 
 (def VideoSystem
   (.extend

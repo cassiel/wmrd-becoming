@@ -247,6 +247,9 @@
                                         (if (mg :status)
                                           "playing" "paused")))))))))
 
+;; View for individual views; text brightens when selected, and is drawn in a subsidiary
+;; colour when expired.
+
 (def ClipView
   (.extend
    Backbone.View
@@ -254,13 +257,23 @@
     :initialize
     (fn []
       (this-as me
+               ;; Make slug text fully opaque when clip selected:
                (.listenTo me
                           (.-model me)
                           "change:selected"
                           (let [mg (lib/getter (.-model me))]
                             (fn []
                               (let [p (.$ me "div.thumb-ident > p")]
-                                (.fadeTo p "fast" (if (mg :selected) 1.0 st/SLUG-OPACITY))))))))
+                                (.fadeTo p "fast" (st/SELECTED-OPACITY (mg :selected)))))))
+
+               ;; Make cover partially opaque (from transparent) when slot is marked as used.
+               (.listenTo me
+                          (.-model me)
+                          "change:used"
+                          (let [mg (lib/getter (.-model me))]
+                            (fn []
+                              (let [d (.$ me "div.thumb-cover")]
+                                (.fadeTo d "fast" (st/USED-OPACITY (mg :used)))))))))
 
     ;; Pull template from page, cache as fn:
     :template
@@ -284,7 +297,10 @@
                           (.-model me)
                           (mg :slug)
                           (mg :thumb)
-                          (mg :video)))))
+                          (mg :video))
+
+                 ;; Locally mark as used. (Not quite right: that happens on upload.)
+                 (.set (.-model me) "used" true))))
 
     ;; Render by replacing our HTML (initially an anonymous `div`) with a template
     ;; rendered with the model properties.
@@ -305,6 +321,10 @@
                (.attr (.$ me ".thumb")
                       "data-original"
                       (.get (.-model me) "thumb"))
+
+               (.fadeTo (.$ me "div.thumb-cover")
+                        "fast"
+                        (st/USED-OPACITY (.get (.-model me) "used")))
 
                me)))))
 
