@@ -11,11 +11,11 @@
 
 (defn load-state []
   (try
-    (apply hash-map (flatten (yaml/parse-string (slurp m/STATE-FILE))))
+    (apply hash-map (flatten (yaml/parse-string (slurp STATE-FILE))))
     (catch FileNotFoundException _ { })))
 
 (defn store-state [state]
-  (spit m/STATE-FILE (yaml/generate-string (seq state))))
+  (spit STATE-FILE (yaml/generate-string (seq state))))
 
 (defn mark-used [state clip]
   (assoc state clip {:used-at (java.util.Date.)}))

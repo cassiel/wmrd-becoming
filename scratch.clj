@@ -94,7 +94,9 @@
 
 (ps/store-state {23 "A" 40 "B"})
 
-(yaml/generate-string [{34 "YES2" 46 "MAYBE"}])
+(yaml/parse-string (yaml/generate-string {46 "MAYBE" 52 "DEFINITELY"}))
+
+(yaml/generate-string {46 "MAYBE" 52 "DEFINITELY"})
 
 
 (seq {1 "A" 3 "B"})
