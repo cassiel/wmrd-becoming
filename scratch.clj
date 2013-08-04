@@ -1,7 +1,9 @@
 (ns user
-  (:require (cljs-video-control [manifest :as m]
-                                [layout :as lx])
-            [clj-http.client :as client])
+  (:require (cassiel.wmrd-becoming [manifest :as m]
+                                   [layout :as lx]
+                                   [persist :as ps])
+            [clj-http.client :as client]
+            [clj-yaml.core :as yaml])
   (:import (java.io File)))
 
 (defn foo [& args] (apply hash-map args))
@@ -75,3 +77,24 @@
 (client/post
  (lx/field "mode")
  {:form-params {:running "1"}})
+
+;; YAML persistence.
+
+(slurp m/STATE-FILE)
+
+(ps/load-state)
+
+(apply hash-map (flatten (ps/load-state)))
+
+(class (first (next (first (ps/load-state)))))
+
+(ps/mark-used {} 42)
+
+(ps/store-state (ps/mark-used {} 42))
+
+(ps/store-state {23 "A" 40 "B"})
+
+(yaml/generate-string [{34 "YES2" 46 "MAYBE"}])
+
+
+(seq {1 "A" 3 "B"})

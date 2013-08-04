@@ -3,7 +3,8 @@
   (:require [ring.util [response :as resp]]
             [clj-http.client :as client]
             (cassiel.wmrd-becoming [manifest :as m]
-                                   [layout :as lx]))
+                                   [layout :as lx]
+                                   [persist :as ps]))
   (:import (java.io File)))
 
 (defn get-store
@@ -42,19 +43,20 @@
 (defn get-clips
   "Get clip list (eventually this'll be scrollable by 'bank')."
   []
-  (letfn [(make-item [[shot frame-lo frame-hi]]
-            (let [a (lx/assets shot frame-lo frame-hi)]
-              (assoc a
-                :slug shot
-                :timestamp (show-time (Integer/parseInt frame-lo))
-                :used (even? (Integer/parseInt shot)))))]
+  (let [state (ps/load-state)]
+    (letfn [(make-item [[shot frame-lo frame-hi]]
+              (let [a (lx/assets shot frame-lo frame-hi)]
+                (assoc a
+                  :slug shot
+                  :timestamp (show-time (Integer/parseInt frame-lo))
+                  :used (ps/used? state (Integer/parseInt shot)))))]
 
-    (resp/response (sort-by :slug (map (comp make-item
-                                             next
-                                             (partial re-find #"(\d+)_(\d+)_(\d+)*")
-                                             str)
-                                       (seq (.listFiles (File. (:shots-file-root m/CONFIG)
-                                                               "shots"))))))))
+      (resp/response (sort-by :slug (map (comp make-item
+                                               next
+                                               (partial re-find #"(\d+)_(\d+)_(\d+)*")
+                                               str)
+                                         (seq (.listFiles (File. (:shots-file-root m/CONFIG)
+                                                                 "shots")))))))))
 
 (defn post-active
   "Post an item for the active sequence."
@@ -73,6 +75,11 @@
     (resp/response { }))
   )
 
-(def upload (partial exchange "upload"))
+(defn upload [p]
+  (let [slug (Integer/parseInt (:slug p))
+        result (exchange "upload" p)]
+    (ps/store-state (ps/mark-used (ps/load-state) slug))
+    result))
+
 (def config (partial exchange "config"))
 (def mode (partial exchange "mode"))
