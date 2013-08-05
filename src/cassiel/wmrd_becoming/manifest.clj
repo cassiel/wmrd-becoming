@@ -68,4 +68,4 @@
    :autoplay true
    :do-upload true})
 
-(def CONFIG MACBOOK-LOCAL)
+(def CONFIG BECOMING1)
