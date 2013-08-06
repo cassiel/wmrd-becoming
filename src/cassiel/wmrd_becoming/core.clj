@@ -30,6 +30,7 @@
   (GET "/store" [] (ajax/get-store))
   (GET "/clips" [] (ajax/get-clips))
   (POST "/upload" {p :params} (ajax/upload p))
+  (POST "/deuse" {p :params} (ajax/deuse p))
   (POST "/config" {p :params} (ajax/config p))
   (POST "/mode" {p :params} (ajax/mode p))
   (POST "/active" {p :params} (ajax/post-active p))

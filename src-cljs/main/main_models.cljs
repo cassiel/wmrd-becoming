@@ -43,7 +43,8 @@
       (this-as me
                (switch-video me clip)
                (.set clip (lib/JS> :selected true))
-               (.set me (lib/JS> :dirty true))
+               (.set me (lib/JS> :dirty true
+                                 :deusable (.get clip "used")))
                (.load me)))
 
     ;; Manual dragging of the selection frame. Drag start/stop.
@@ -123,7 +124,8 @@
                :dragging false
                :normedDragPosition 0.0
                :pixelDragPosition 0
-               :dirty false})))
+               :dirty false
+               :deusable false})))
 
 ;; Model purely for sending video selection details to Field, via AJAX. (We need
 ;; other models for config and mode.)
@@ -141,7 +143,8 @@
                                   :keyStartPosition (.get main-model "keyStartPosition")
                                   :keyEndPosition (.get main-model "keyEndPosition"))
                          (lib/JS> :success (fn [] (.log js/console "Upload OK")
-                                             (.set main-model (lib/JS> :dirty false))
+                                             (.set main-model (lib/JS> :dirty false
+                                                                       :deusable true))
                                              (.set (.get main-model "clipModel")
                                                    (lib/JS> :used true)))
                                   :error (fn [ev resp opts]
@@ -152,6 +155,28 @@
     :defaults {:slug "---"
                :keyStartPosition 0.5
                :keyEndPosition 0.5})))
+
+;; Dedicated model just for marking clips as no-longer-unused.
+(def DeUse
+  (.extend
+   Backbone.Model
+   (lib/JS>
+    :url "/deuse"
+
+    :deuse
+    (fn [main-model]
+      (this-as me
+               (.log js/console "DEUSE")
+               (.save me
+                      (lib/JS> :slug (.get main-model "slug"))
+                      (lib/JS> :success (fn [model, response, options]
+                                          (.log js/console response)
+                                          (.set main-model (lib/JS> :deusable false))
+                                          (.set (.get main-model "clipModel")
+                                                (lib/JS> :used false)))
+                               :error (fn [model, xhr, options] (js/alert "/deuse FAIL"))))))
+    ))
+  )
 
 (def Config
   (.extend
@@ -165,7 +190,7 @@
                (.save me
                       (lib/JS> :in3d (- 1 (.get me "in3d")))
                       (lib/JS> :success (fn [model, response, options] (.log js/console response))
-                               :error (fn [model, xhr, options] (js/alert "FAIL"))))))
+                               :error (fn [model, xhr, options] (js/alert "/config FAIL"))))))
 
     :defaults {:in3d 1})))
 

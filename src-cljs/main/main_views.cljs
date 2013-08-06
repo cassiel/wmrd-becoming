@@ -165,6 +165,13 @@
                                                                       false 0.0} (mg :dirty)))))
 
                      (.listenTo me
+                                m
+                                "change:deusable"
+                                (fn []
+                                  (.fadeTo (.$ me "#deuse") "fast" ({true 1.0
+                                                                     false 0.0} (mg :deusable)))))
+
+                     (.listenTo me
                                 cm
                                 "change:in3d"
                                 (fn []
@@ -219,7 +226,10 @@
 
      "click #do-2d" (fn [] (this-as me (.flip3d (.-configModel (.-options me)))))
 
-     "click #pause-it" (fn [] (this-as me (.flipRunning (.-modeModel (.-options me)))))}
+     "click #pause-it" (fn [] (this-as me (.flipRunning (.-modeModel (.-options me)))))
+
+     "click #deuse" (fn [] (this-as me (.deuse (.-deuseModel (.-options me))
+                                              (.-model me))))}
 
     :render
     (lib/on-model-and-view (fn [m v]

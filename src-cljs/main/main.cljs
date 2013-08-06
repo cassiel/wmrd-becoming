@@ -14,6 +14,7 @@
         main-view (v/VideoView. (lib/JS> :el ".container"
                                          :model model
                                          :uploadModel (m/Upload.)
+                                         :deuseModel (m/DeUse.)
                                          :configModel (m/Config.)
                                          :modeModel (m/Mode.)))]
     (lib/JS> :video v

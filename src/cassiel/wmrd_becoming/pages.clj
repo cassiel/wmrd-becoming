@@ -51,7 +51,8 @@
      (lx/format-row 12
                     [4 [:button#upload.big-button "UPLOAD"]]
                     [2 [:button#do-2d.big-button "2D"]]
-                    [2 [:button#pause-it.big-button "PAUSE"]])
+                    [2 [:button#pause-it.big-button "PAUSE"]]
+                    [2 [:button#deuse.big-button "un-use"]])
 
      [:div {:style "height: 10px"}]
 

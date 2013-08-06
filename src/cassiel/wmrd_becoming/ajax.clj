@@ -81,5 +81,10 @@
     (ps/store-state (ps/mark-used (ps/load-state) slug))
     result))
 
+(defn deuse [p]
+  (let [slug (Integer/parseInt (:slug p))]
+    (ps/store-state (ps/mark-unused (ps/load-state) slug))
+    (resp/response { })))
+
 (def config (partial exchange "config"))
 (def mode (partial exchange "mode"))

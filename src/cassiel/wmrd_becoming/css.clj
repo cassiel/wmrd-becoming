@@ -75,4 +75,5 @@
        [:#curtainL {:border-right (st/CURTAIN-TRIM-HIGHLIGHT false)}]
        [:#curtainR {:border-left (st/CURTAIN-TRIM-HIGHLIGHT false)}]
        [:button#upload {:opacity 0.0}]
+       [:button#deuse {:opacity 0.0}]
        [:#debug {:display "none"}]))

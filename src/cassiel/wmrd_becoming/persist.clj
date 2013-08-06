@@ -20,5 +20,8 @@
 (defn mark-used [state clip]
   (assoc state clip {:used-at (java.util.Date.)}))
 
+(defn mark-unused [state clip]
+  (dissoc state clip))
+
 (defn used? [state clip]
   (contains? state clip))
