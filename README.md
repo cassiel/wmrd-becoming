@@ -2,7 +2,7 @@
 
 # wmrd-becoming
 
-Video browing and selection front end for [Wayne McGregor|Random Dance](http://www.randomdance.org)'s ~Becoming~ project.
+Video browing and selection front end for [Wayne McGregor|Random Dance](http://www.randomdance.org)'s _Becoming_ project.
 
 The code here draws on a demonstration [ClojureScript and Backbone project](https://github.com/konrad-garus/hello-clj-backbone) by Konrad Garus, but implements a  complete Backbone MVC stack, rather than doing the event capture by hand, and also links into some HTML5 video control machinery.
 
