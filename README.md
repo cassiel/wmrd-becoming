@@ -1,12 +1,10 @@
 `-*- word-wrap: t; -*-`
 
-# smrc-becoming
+# wmrd-becoming
 
-This project is a collection of test pages for a video selection and control system currently under construction for [Wayne McGregor|Random Dance](http://www.randomdance.org). While the final system is going to be quite complex, I've built a collection of demo pages to test various isolated components; these should be independent and reasonably easy to understand. The demos include on-page sliders, drag-and-drop, and assorted random element rewriting.
+Video browing and selection front end for [Wayne McGregor|Random Dance](http://www.randomdance.org)'s ~Becoming~ project.
 
-The examples are in no particular order, and vary in sophistication; later examples use utility code and minor refinements developed along the way and not present in the earlier ones, so do examine them all!
-
-The code here draws on a [ClojureScript and Backbone project](https://github.com/konrad-garus/hello-clj-backbone) by Konrad Garus, but implements a series of complete Backbone MVC stacks, rather than doing the event capture by hand.
+The code here draws on a demonstration [ClojureScript and Backbone project](https://github.com/konrad-garus/hello-clj-backbone) by Konrad Garus, but implements a  complete Backbone MVC stack, rather than doing the event capture by hand, and also links into some HTML5 video control machinery.
 
 ## Technologies
 
@@ -21,6 +19,8 @@ Install [Leiningen](https://github.com/technomancy/leiningen). Then, in the proj
 - `lein go` to run the server
 
 The test site will then be running on `http://localhost:3000`. Use `lein auto` to run an auto-compiler on the ClojureScript if you want to modify it. (Changes to the Hiccup page declarations will be picked up automatically on reload.)
+
+_Note_: the site needs access to a tree of video assets (with thumbnails) in order to work. We're working on this, and an abstraction layer to allow the system to access different kinds of assets.
 
 ## License
 
